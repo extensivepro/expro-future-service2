@@ -1,0 +1,64 @@
+{
+  "name": "members",
+  "base": "PersistedModel",
+  "properties": {
+    "name": {
+      "type": "string"
+    },
+    "code": {
+      "type": "string"
+    },
+    "email": {
+      "type": "string"
+    },
+    "phone": {
+      "type": "string"
+    },
+    "deliveryAddress": {
+      "type": "string"
+    },
+    "shop": {
+      "type": "object"
+    },
+    "merchant": {
+      "type": "object"
+    },
+    "postPoint": {
+      "type": "number"
+    },
+    "postTotalPoint": {
+      "type": "number"
+    },
+    "level": {
+      "type": "string"
+    },
+    "status": {
+      "type": "string"
+    },
+    "sinceAt": {
+      "type": "number"
+    },
+    "dueAt": {
+      "type": "number"
+    },
+    "createdAt": {
+      "type": "number"
+    },
+    "account": {
+      "type": "object"
+    },
+    "registerShopID": {
+      "type": "string"
+    },
+    "updateAt": {
+      "type": "number"
+    },
+    "weixin": {
+      "type": "object"
+    }
+  },
+  "validations": [],
+  "relations": {},
+  "acls": [],
+  "methods": []
+}

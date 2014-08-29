@@ -1,0 +1,12 @@
+{
+  "db": {
+    "name": "db",
+    "connector": "memory"
+  },
+  
+  "futureDB": {
+    "name": "futureDB",
+    "connector": "mongodb",
+    "database": "passpro-test"
+  }
+}

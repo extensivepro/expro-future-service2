@@ -1,0 +1,36 @@
+{
+  "name": "expro-future-service2",
+  "version": "0.0.1",
+  "main": "server/server.js",
+  "scripts": {
+    "pretest": "jshint ."
+  },
+  "dependencies": {
+    "compression": "^1.0.3",
+    "errorhandler": "^1.1.1",
+    "loopback": "^2.0.0",
+    "loopback-boot": "^2.0.0",
+    "loopback-connector-mongodb": "^1.4.3",
+    "loopback-datasource-juggler": "^2.7.0",
+    "serve-favicon": "^2.0.1",
+    "loopback-explorer": "^1.1.0"
+  },
+  "optionalDependencies": {
+    "loopback-explorer": "^1.1.0"
+  },
+  "devDependencies": {
+    "qs": "^2.2.1",
+    "superagent": "^0.18.2"
+  },
+  "description": "extensivepro future service 2nd",
+  "directories": {
+    "test": "test"
+  },
+  "keywords": [
+    "service",
+    "expro",
+    "future"
+  ],
+  "author": "extensivepro",
+  "license": "ISC"
+}
