@@ -10,6 +10,7 @@ var paths = {
   fonts: 'src/fonts/**.*',
   images: 'src/img/**/*.*',
   styles: 'src/less/**/*.less',
+  partials: 'src/partials/**/*',
   index: 'src/index.html',
   bower_fonts: 'src/bower_components/**/*.{ttf,woff,eof,svg}',
   bower_components: 'src/bower_components/**/*.*',
@@ -28,7 +29,12 @@ gulp.task('usemin', function() {
 /**
  * Copy assets
  */
-gulp.task('copy-assets', ['copy-images', 'copy-fonts', 'copy-bower_fonts']);
+gulp.task('copy-assets', ['copy-partials', 'copy-images', 'copy-fonts', 'copy-bower_fonts']);
+
+gulp.task('copy-partials', function(){
+  return gulp.src(paths.partials)
+    .pipe(gulp.dest('../client/partials'));
+});
 
 gulp.task('copy-images', function(){
   return gulp.src(paths.images)
@@ -50,6 +56,7 @@ gulp.task('copy-bower_fonts', function(){
  */
 gulp.task('watch', function () {
   gulp.watch([paths.styles, paths.index, paths.js], ['usemin']);
+  gulp.watch([paths.partials], ['copy-partials']);
   gulp.watch([paths.images], ['copy-images']);
   gulp.watch([paths.fonts], ['copy-fonts']);
   gulp.watch([paths.bower_fonts], ['copy-bower_fonts']);

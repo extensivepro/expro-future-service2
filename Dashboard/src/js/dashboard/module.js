@@ -1,1 +1,4 @@
-angular.module('Dashboard', ['ui.bootstrap', 'ui.router', 'ngCookies']);
+angular.module('Dashboard', ['ui.utils', 'ui.bootstrap', 'ui.router', 'ngCookies', 'ngResource']).
+config(['$httpProvider', function($httpProvider) {
+	$httpProvider.defaults.withCredentials = true
+}])
