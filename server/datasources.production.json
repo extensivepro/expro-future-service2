@@ -7,7 +7,7 @@
   "futureDB": {
     "name": "futureDB",
     "connector": "mongodb",
-    "database": "passpro-dev"
+    "database": "passpro"
   }
    
 }
