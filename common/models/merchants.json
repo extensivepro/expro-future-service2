@@ -1,67 +1,61 @@
 {
-  "name": "members",
+  "name": "merchants",
   "base": "PersistedModel",
   "properties": {
     "name": {
       "type": "string"
     },
-    "code": {
+    "fullName": {
       "type": "string"
     },
     "email": {
       "type": "string"
     },
-    "phone": {
-      "type": "string"
-    },
-    "deliveryAddress": {
-      "type": "string"
-    },
-    "shop": {
-      "type": "object"
-    },
-    "merchant": {
-      "type": "object"
-    },
-    "postPoint": {
-      "type": "number"
-    },
-    "postTotalPoint": {
-      "type": "number"
-    },
-    "level": {
+    "telephone": {
       "type": "string"
     },
     "status": {
       "type": "string"
     },
-    "sinceAt": {
+    "email": {
+      "type": "string"
+    },
+    "address": {
+      "type": "string"
+    },
+    "zip": {
+      "type": "string"
+    },
+    "url": {
+      "type": "string"
+    },
+    "newestDeviceCode": {
       "type": "number"
     },
-    "dueAt": {
-      "type": "number"
+    "itemTags": {
+      "type": "array"
+    },
+    "weixin": {
+      "type": "object"
+    },
+    "logo": {
+      "type": "object"
     },
     "createdAt": {
       "type": "number"
     },
-    "account": {
+    "pointRule": {
       "type": "object"
-    },
-    "registerShopID": {
-      "type": "string"
     },
     "updateAt": {
       "type": "number"
-    },
-    "weixin": {
-      "type": "object"
     }
   },
   "validations": [],
   "relations": {
-    "merchant2": {
-      "type": "belongsTo",
-      "model": "merchants",
+    "members": {
+      "type": "hasMany",
+      "model": "members",
       "foreignKey": "merchant.merchantID"
     }
   },
