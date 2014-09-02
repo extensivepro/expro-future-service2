@@ -1,20 +1,18 @@
 /**
- * Members Controller
+ * List Controller
  */
-angular.module('Dashboard').controller('MembersCtrl', ['$scope', 'Members', MembersCtrl])
-
-function MembersCtrl($scope, Members) {
+app.controller('ListCtrl', function ListCtrl($scope) {
   $scope.entities = []
-  $scope.resource = Members
-  $scope.sortOptions = []
+  $scope.resource = undefined
+  $scope.orderOptions = ['createdAt DESC']
   $scope.search = {
     text: '',
     orFields: ['name', 'phone']
   }
 
-  var fetch = function () {
+  $scope.fetch = function () {
     var filter = { 
-      order: ['createdAt DESC'],
+      order: $scope.orderOptions,
       limit: 20
     }
     if($scope.search.text !== '' && $scope.search.orFields.length > 0) {
@@ -26,7 +24,7 @@ function MembersCtrl($scope, Members) {
       })
       filter.where = {'or': ors}
     }
-    console.log('Filter:', filter, $scope.search)
+    console.log('Filter:', filter, $scope)
     $scope.resource.query({filter: filter}, function (results) {
       $scope.enitities = results
     }, function (error) {
@@ -34,12 +32,11 @@ function MembersCtrl($scope, Members) {
     })
   }
   
-  $scope.fetch = fetch;
   $scope.dateFormat = function (date) {
     return moment.unix(date).format('YYYY-MM-DD hh:mm:ss')
   }
   
   $scope.init = function() {
-    fetch()
+    $scope.fetch()
   }
-}
+})

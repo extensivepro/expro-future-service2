@@ -15,12 +15,12 @@ angular.module('Dashboard').config(['$stateProvider', '$urlRouterProvider',
             url: '/',
             templateUrl: 'partials/dashboard.html'
         })
+        .state('merchants', {
+            url: '/merchants', 
+            templateUrl: 'partials/merchants.html'
+        })
         .state('members', {
             url: '/members',
             templateUrl: 'partials/members.html'
         })
-        .state('tables', {
-            url: '/tables', 
-            templateUrl: 'partials/tables.html'
-        });
 }]);
