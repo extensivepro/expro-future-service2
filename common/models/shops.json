@@ -1,0 +1,63 @@
+{
+  "name": "shops",
+  "base": "PersistedModel",
+  "properties": {
+    "name": {
+      "type": "string"
+    },
+    "code": {
+      "type": "string"
+    },
+    "merchantID": {
+      "type": "string"
+    },
+    "status": {
+      "type": "string"
+    },
+    "telephone": {
+      "type": "string"
+    },
+    "address": {
+      "type": "string"
+    },
+    "createdAt": {
+      "type": "number"
+    },
+    "closedAt": {
+      "type": "number"
+    },
+    "updateAt": {
+      "type": "number"
+    },
+    "openRes": {
+      "type": "array"
+    },
+    "location": {
+      "type": "object"
+    },
+    "location": {
+      "type": "object"
+    },
+    "sequenceNumber": {
+      "type": "number"
+    },
+    "printers": {
+      "type": "array"
+    }
+  },
+  "validations": [],
+  "relations": {
+    "merchant": {
+      "type": "belongsTo",
+      "model": "merchants",
+      "foreignKey": "merchantID"
+    },
+    "devices": {
+      "type": "hasMany",
+      "model": "devices",
+      "foreignKey": "shop.id"
+    }
+  },
+  "acls": [],
+  "methods": []
+}

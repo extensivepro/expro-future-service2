@@ -1,0 +1,29 @@
+{
+  "name": "devices",
+  "plural": "devices",
+  "base": "PersistedModel",
+  "properties": {
+    "udid": {
+      "type": "string"
+    },
+    "code": {
+      "type": "number"
+    },
+    "name": {
+      "type": "string"
+    },
+    "shop": {
+      "type": "object"
+    },
+    "createdAt": {
+      "type": "number"
+    },
+    "updateAt": {
+      "type": "number"
+    }
+  },
+  "validations": [],
+  "relations": {},
+  "acls": [],
+  "methods": []
+}

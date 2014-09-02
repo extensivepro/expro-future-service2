@@ -31,6 +31,17 @@
   "merchants": {
     "dataSource": "futureDB",
     "public": true
-  }
-  
+  },
+  "devices": {
+    "dataSource": "futureDB",
+    "public": true
+  },
+  "shops": {
+    "dataSource": "futureDB",
+    "public": true
+  },
+  "employes": {
+    "dataSource": "futureDB",
+    "public": true
+  }  
 }
