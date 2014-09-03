@@ -23,4 +23,8 @@ angular.module('Dashboard').config(['$stateProvider', '$urlRouterProvider',
             url: '/members',
             templateUrl: 'partials/members.html'
         })
+        .state('shops', {
+            url: '/shops',
+            templateUrl: 'partials/shops.html'
+        })
 }]);

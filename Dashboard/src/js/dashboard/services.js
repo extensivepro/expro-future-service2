@@ -16,3 +16,9 @@ angular.module('Dashboard')
       count: { method: 'GET' , params: {memberID: 'count'}}
     })
   })
+  .factory("Shops", function ($resource) {
+    return $resource(baseURL + '/shops/:shopID', {merchantID: '@_id'}, {
+      update: { method: 'PUT' } 
+    })
+  })
+  

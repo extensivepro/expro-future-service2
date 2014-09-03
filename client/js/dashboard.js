@@ -28,6 +28,10 @@ angular.module('Dashboard').config(['$stateProvider', '$urlRouterProvider',
             url: '/members',
             templateUrl: 'partials/members.html'
         })
+        .state('shops', {
+            url: '/shops',
+            templateUrl: 'partials/shops.html'
+        })
 }]);
 
 'use strict';
@@ -48,6 +52,12 @@ angular.module('Dashboard')
       count: { method: 'GET' , params: {memberID: 'count'}}
     })
   })
+  .factory("Shops", function ($resource) {
+    return $resource(baseURL + '/shops/:shopID', {merchantID: '@_id'}, {
+      update: { method: 'PUT' } 
+    })
+  })
+  
 /**
  * List Controller
  */
@@ -175,6 +185,14 @@ app.controller('MembersCtrl', function MembersCtrl($scope, Members, $controller)
 app.controller('MerchantsCtrl', function MerchantsCtrl($scope, Merchants, $controller) {
   $controller('ListCtrl', {$scope: $scope})
   $scope.resource = Merchants
+  $scope.search.orFields = ['name', 'phone']
+})
+/**
+ * Shops Controller
+ */
+app.controller('ShopsCtrl', function ShopsCtrl($scope, Shops, $controller) {
+  $controller('ListCtrl', {$scope: $scope})
+  $scope.resource = Shops
   $scope.search.orFields = ['name', 'phone']
 })
 /**
