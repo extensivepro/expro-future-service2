@@ -7,8 +7,9 @@ app.controller('ListCtrl', function ListCtrl($scope) {
   $scope.orderOptions = ['createdAt DESC']
   $scope.search = {
     text: '',
-    orFields: ['name', 'phone']
+    orFields: ['name', 'phone'],
   }
+  $scope.includes = []
 
   $scope.fetch = function () {
     var filter = { 
@@ -18,11 +19,15 @@ app.controller('ListCtrl', function ListCtrl($scope) {
     if($scope.search.text !== '' && $scope.search.orFields.length > 0) {
       var ors = []
       $scope.search.orFields.forEach(function (field) {
-        var o = {}
-        o[field] = {like: $scope.search.text}
-        ors.push(o)
+        var sk = {}
+        sk[field] = {like: $scope.search.text}
+        ors.push(sk)
       })
       filter.where = {'or': ors}
+    }
+    
+    if ($scope.includes.length > 0) {
+      filter.include = $scope.includes
     }
     console.log('Filter:', filter, $scope)
     $scope.resource.query({filter: filter}, function (results) {
@@ -30,6 +35,10 @@ app.controller('ListCtrl', function ListCtrl($scope) {
     }, function (error) {
       console.log('Query ', resource, error)
     })
+  }
+  
+  $scope.showDetail = function (entity) {
+    console.log(entity)
   }
   
   $scope.dateFormat = function (date) {

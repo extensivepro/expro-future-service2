@@ -15,6 +15,7 @@
               <th>编码</th>
               <th>地址</th>
               <th>电话</th>
+              <th>所属商户</th>
               <th>状态</th>
               <th>创建时间</th>
             </tr>
@@ -26,6 +27,7 @@
               <td>{{entity.code}}</td>
               <td>{{entity.address}}</td>
               <td>{{entity.telephone}}</td>
+              <td>{{entity.merchant.name}}</td>
               <td>{{entity.status | uppercase}}</td>
               <td>{{dateFormat(entity.createdAt)}}</td>
             </tr>
