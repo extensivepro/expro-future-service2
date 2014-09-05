@@ -2,6 +2,9 @@
   "name": "merchants",
   "base": "PersistedModel",
   "properties": {
+    "owner": {
+      "type": "object"
+    },
     "name": {
       "type": "string"
     },
