@@ -19,7 +19,8 @@
   <script src="lib/angular-bootstrap/ui-bootstrap.js"></script>
   <script src="lib/angular-bootstrap/ui-bootstrap-tpls.js"></script>
   <script src="lib/angular-ui-router/angular-ui-router.js"></script>
-  <script src="lib/angular-resource/angular-resource.min.js"></script>
+  <script src="lib/angular-resource/angular-resource.js"></script>
+  <script src="lib/angular-morph/dist/angular-morph.js"></script>
   <script src="lib/moment/moment.min.js"></script>
 
   <script src="js/dashboard.js"></script>
@@ -86,6 +87,9 @@
         <div class="row header">
           <div class="col-xs-12">
             <div class="user pull-right">
+              <div class="item">
+                <a href="#" ng-morph-modal="loginform"> Logout </a>
+              </div>
               <div class="item dropdown">
                 <a href="#" class="dropdown-toggle">
                   <img src="img/avatar.jpg">
@@ -112,9 +116,7 @@
                   </li>
                   <li class="divider"></li>
                   <li class="link">
-                    <a href="#">
-                      Logout
-                    </a>
+                    <button ng-morph-modal="loginform" > Modal </button>
                   </li>
                 </ul>
               </div>

@@ -1,5 +1,5 @@
 (function(){ 
-var app = angular.module('Dashboard', ['ui.utils', 'ui.bootstrap', 'ui.router', 'ngCookies', 'ngResource']).
+var app = angular.module('Dashboard', ['ui.utils', 'ui.bootstrap', 'ui.router', 'ngCookies', 'ngResource', 'ngMorph']).
 config(['$httpProvider', function($httpProvider) {
 	$httpProvider.defaults.withCredentials = true
 }])
@@ -112,10 +112,7 @@ app.controller('ListCtrl', function ListCtrl($scope) {
 /**
  * Master Controller
  */
-angular.module('Dashboard')
-    .controller('MasterCtrl', ['$scope', '$cookieStore', MasterCtrl]);
-
-function MasterCtrl($scope, $cookieStore) {
+app.controller('MasterCtrl', function MasterCtrl($scope, $cookieStore) {
     /**
      * Sidebar Toggle & Cookie Control
      *
@@ -157,10 +154,17 @@ function MasterCtrl($scope, $cookieStore) {
 
         $cookieStore.put('toggle', $scope.toggle);
     };
+    
+    $scope.loginform = {
+      // trigger: 'click',
+      closeEl: '.close-x',
+      modal: {
+        templateUrl: 'partials/loginform.html'
+      }
+    };
 
     window.onresize = function() { $scope.$apply(); };
-}
-
+});
 /**
  * Alerts Controller
  */

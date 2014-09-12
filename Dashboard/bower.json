@@ -26,7 +26,8 @@
     "font-awesome": "~4.1.0",
     "angular-resource": "~1.2.23",
     "moment": "~2.8.2",
-    "angular-ui-utils": "~0.1.1"
+    "angular-ui-utils": "~0.1.1",
+    "angular-morph": "*"
   },
   "repository": {
     "type": "git",

@@ -45,11 +45,14 @@
   <!-- build:js lib/angular-ui-router/angular-ui-router.js -->
   <script type="text/javascript" src="bower_components/angular-ui-router/release/angular-ui-router.js"></script>
   <!-- endbuild -->
-  <!-- build:js lib/angular-resource/angular-resource.min.js -->
-  <script type="text/javascript" src="bower_components/angular-resource/angular-resource.min.js"></script>
+  <!-- build:js lib/angular-resource/angular-resource.js -->
+  <script type="text/javascript" src="bower_components/angular-resource/angular-resource.js"></script>
+  <!-- endbuild -->
+  <!-- build:js lib/angular-morph/dist/angular-morph.js -->
+  <script type="text/javascript" src="bower_components/angular-morph/dist/angular-morph.js"></script>
   <!-- endbuild -->
   <!-- build:js lib/moment/moment.min.js -->
-  <script type="text/javascript" src="bower_components/moment/min/moment.min.js"></script>
+  <script type="text/javascript" src="bower_components/moment/moment.js"></script>
   <!-- endbuild -->
 
   <!-- build:js js/dashboard.js -->
@@ -127,6 +130,9 @@
         <div class="row header">
           <div class="col-xs-12">
             <div class="user pull-right">
+              <div class="item">
+                <a href="#" ng-morph-modal="loginform"> Logout </a>
+              </div>
               <div class="item dropdown">
                 <a href="#" class="dropdown-toggle">
                   <img src="img/avatar.jpg">
@@ -153,9 +159,7 @@
                   </li>
                   <li class="divider"></li>
                   <li class="link">
-                    <a href="#">
-                      Logout
-                    </a>
+                    <button ng-morph-modal="loginform" > Modal </button>
                   </li>
                 </ul>
               </div>
