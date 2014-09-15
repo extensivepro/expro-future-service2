@@ -27,8 +27,8 @@
   <!-- SCRIPTS -->
 
 </head>
-<body ng-controller="MasterCtrl">
-  <div id="page-wrapper" ng-class="{'active': toggle}" ng-cloak>
+<body ng-controller="ApplicationCtrl">
+  <div id="page-wrapper" ng-controller="MasterCtrl" ng-class="{'active': toggle}" ng-cloak>
 
     <!-- Sidebar -->
 
@@ -87,9 +87,6 @@
         <div class="row header">
           <div class="col-xs-12">
             <div class="user pull-right">
-              <div class="item">
-                <a href="#" ng-morph-modal="loginform"> Logout </a>
-              </div>
               <div class="item dropdown">
                 <a href="#" class="dropdown-toggle">
                   <img src="img/avatar.jpg">
@@ -116,7 +113,7 @@
                   </li>
                   <li class="divider"></li>
                   <li class="link">
-                    <button ng-morph-modal="loginform" > Modal </button>
+                    <button ng-click="logout" > 退出 </button>
                   </li>
                 </ul>
               </div>
@@ -152,7 +149,9 @@
         <section data-ui-view></section>
         <!-- End Main Content -->
       </div><!-- End Page Content -->
+  
     </div><!-- End Content Wrapper -->
+  
   </div><!-- End Page Wrapper -->
 </body>
 </html>
