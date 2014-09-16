@@ -13,7 +13,7 @@ app.config(function($stateProvider, $urlRouterProvider, USER_ROLES) {
         url: '/',
         templateUrl: 'partials/dashboard.html',
         data: {
-          // authorizedRoles: [USER_ROLES.admin, USER_ROLES.editor]
+          authorizedRoles: [USER_ROLES.admin, USER_ROLES.editor]
         }
     })
     .state('merchants', {

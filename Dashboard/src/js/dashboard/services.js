@@ -5,19 +5,6 @@
 var baseURL = 'http://service.fankahui.com:3000/api'
 
 angular.module('expro-future2.services', ['lbServices'])
-  .service('Session', function () {
-    this.create = function (sessionId, userId, userRole) {
-      this.id = sessionId;
-      this.userId = userId;
-      this.userRole = userRole;
-    };
-    this.destroy = function () {
-      this.id = null;
-      this.userId = null;
-      this.userRole = null;
-    };
-    return this;
-  })
   .factory("Merchants", function ($resource) {
     return $resource(baseURL + '/merchants/:merchantID', {merchantID: '@_id'}, {
       update: { method: 'PUT' } 
@@ -34,34 +21,44 @@ angular.module('expro-future2.services', ['lbServices'])
       update: { method: 'PUT' } 
     })
   })
-  .factory('AuthService', function (Session) {
-    var authService = {};
- 
-    authService.login = function (credentials) {
-      return $http
-        .post('/login', credentials)
-        .then(function (res) {
-          Session.create(res.data.id, res.data.user.id,
-                         res.data.user.role);
-          return res.data.user;
-        });
-    };
- 
-    authService.isAuthenticated = function () {
-      return !!Session.userId;
-    };
- 
-    authService.isAuthorized = function (authorizedRoles) {
-      if (!angular.isArray(authorizedRoles)) {
-        authorizedRoles = [authorizedRoles];
+  .factory('AuthService', function (User) {
+    var authService = {
+      currentUser: null,
+      isAuthenticated: function () {
+        return !!this.currentUser;
+      },
+      isAuthorized: function (authorizedRoles) {
+        if (!angular.isArray(authorizedRoles)) {
+          authorizedRoles = [authorizedRoles];
+        }
+        return (this.isAuthenticated());//Just for test
+        return (this.isAuthenticated() &&
+          authorizedRoles.indexOf(Session.userRole) !== -1);
+      },
+      login: function (credentials, successCB, failureCB) {
+        var theSelf = this;
+        User.login({include: 'user', rememberMe: true}, credentials, function (user) {
+          theSelf.currentUser = user;
+          successCB(user);
+        }, failureCB);
+      },
+      ensureHasCurrentUser: function() {
+        if (this.currentUser) {
+          console.log('Using cached current user.');
+        } else {
+          console.log('Fetching current user from the server.');
+          this.currentUser = User.getCurrent(function() {
+            // success
+          }, function(response) {
+            console.log('User.getCurrent() err', arguments);
+          });
+        }
       }
-      return (authService.isAuthenticated() &&
-        authorizedRoles.indexOf(Session.userRole) !== -1);
     };
  
     return authService;
   })
-  .run(function ($rootScope, AUTH_EVENTS, AuthService) {
+  .run(function ($rootScope, AUTH_EVENTS, AuthService, User) {
     $rootScope.$on('$stateChangeStart', function (event, next) {
       if (!next.data || !next.data.authorizedRoles) return;
       

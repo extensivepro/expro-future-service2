@@ -1,9 +1,11 @@
-var gulp    = require('gulp'),
-  less      = require('gulp-less'),
-  usemin    = require('gulp-usemin'),
-  wrap      = require('gulp-wrap'),
-  connect   = require('gulp-connect'),
-  watch     = require('gulp-watch');
+var gulp          = require('gulp'),
+  rename          = require('gulp-rename'),
+  loopbackAngular = require('gulp-loopback-sdk-angular'),
+  less            = require('gulp-less'),
+  usemin          = require('gulp-usemin'),
+  wrap            = require('gulp-wrap'),
+  connect         = require('gulp-connect'),
+  watch           = require('gulp-watch');
 
 var paths = {
   js: 'src/js/**/*.*',
@@ -25,6 +27,13 @@ gulp.task('usemin', function() {
     }))
     .pipe(gulp.dest('../client/'));
 });
+
+gulp.task('lb-angular', function () {
+  return gulp.src('../server/server.js')
+    .pipe(loopbackAngular())
+    .pipe(rename('lb-services.js'))
+    .pipe(gulp.dest('../client/js'));
+})
 
 /**
  * Copy assets
@@ -84,5 +93,5 @@ gulp.task('compile-less', function(){
       .pipe(gulp.dest('../client/css'));
 });
 
-gulp.task('build', ['usemin', 'copy-assets']);
+gulp.task('build', ['usemin', 'copy-assets', 'lb-angular']);
 gulp.task('default', ['build', 'webserver', 'livereload', 'watch']);

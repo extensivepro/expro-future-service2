@@ -19,6 +19,7 @@
     "loopback-explorer": "^1.1.0"
   },
   "devDependencies": {
+    "gulp-loopback-sdk-angular": "^0.1.1",
     "qs": "^2.2.1",
     "superagent": "^0.18.2"
   },

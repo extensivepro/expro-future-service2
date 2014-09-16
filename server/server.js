@@ -10,6 +10,7 @@ app.use(loopback.favicon());
 app.use(loopback.compress());
 
 // -- Add your pre-processing middleware here --
+app.use(loopback.token({ model: app.models.accessToken }));
 
 // boot scripts mount components like REST API
 boot(app, __dirname);

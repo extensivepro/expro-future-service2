@@ -3,21 +3,20 @@
  * Global Level variable and function
  */
 
-app.controller('ApplicationCtrl', function ($scope, $modal, USER_ROLES, AuthService, AUTH_EVENTS) {
-  $scope.currentUser = null;
-  $scope.userRoles = USER_ROLES;
-  $scope.isAuthorized = AuthService.isAuthorized;
- 
-  $scope.setCurrentUser = function (user) {
-    $scope.currentUser = user;
-  };
+app.controller('ApplicationCtrl', function ($scope, $modal, AuthService, AUTH_EVENTS) {
   
+  AuthService.ensureHasCurrentUser();
+
+  $scope.$on(AUTH_EVENTS.loginSuccess, function (user) {
+    console.log('AUTH_EVENTS.loginSuccess------', user)
+  })
+
   $scope.$on(AUTH_EVENTS.notAuthorized, function (d, data) {
     console.log('AUTH_EVENTS.notAuthorized------')
   })
 
   $scope.$on(AUTH_EVENTS.notAuthenticated, function (d, data) {
-    console.log('AUTH_EVENTS.notAuthenticated======')
+    console.log('AUTH_EVENTS.notAuthenticated======', d, data)
     login()
   })
   
@@ -29,27 +28,26 @@ app.controller('ApplicationCtrl', function ($scope, $modal, USER_ROLES, AuthServ
       keybaord: false
     });
 
-    modalInstance.result.then(function (selectedItem) {
-      $scope.selected = selectedItem;
+    modalInstance.result.then(function (user) {
+      console.log('--------user------',user)
     }, function () {
-      $log.info('Modal dismissed at: ' + new Date());
+      console.info('Modal dismissed at: ' + new Date());
     });
   }
 })
 
-var LoginModalInstanceCtrl = function ($scope, $modalInstance, $rootScope, AUTH_EVENTS, User, AuthService) {
+var LoginModalInstanceCtrl = function ($scope, $modalInstance, $rootScope, AUTH_EVENTS, AuthService) {
 
   $scope.credentials = {
     username: '',
     password: ''
   };
   $scope.login = function (credentials) {
-    User.login({include: 'user', rememberMe: true}, $scope.credentials, function (user) {
-      console.log('======user======', user)
+    AuthService.login(credentials, function (user) {
       $rootScope.$broadcast(AUTH_EVENTS.loginSuccess);
-      $scope.setCurrentUser(user);
+      $modalInstance.close(user);
     }, function () {
       $rootScope.$broadcast(AUTH_EVENTS.loginFailed);
     });
-  };
+  } 
 };

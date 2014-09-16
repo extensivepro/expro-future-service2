@@ -6,22 +6,22 @@
     ]
   },
   "User": {
-    "dataSource": "db"
+    "dataSource": "futureDB"
   },
   "AccessToken": {
-    "dataSource": "db",
+    "dataSource": "futureDB",
     "public": false
   },
   "ACL": {
-    "dataSource": "db",
+    "dataSource": "futureDB",
     "public": false
   },
   "RoleMapping": {
-    "dataSource": "db",
+    "dataSource": "futureDB",
     "public": false
   },
   "Role": {
-    "dataSource": "db",
+    "dataSource": "futureDB",
     "public": false
   },
   "members": {

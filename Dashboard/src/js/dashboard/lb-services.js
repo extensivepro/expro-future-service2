@@ -85,6 +85,7 @@ module.factory(
               var accessToken = response.data;
               LoopBackAuth.currentUserId = accessToken.userId;
               LoopBackAuth.accessTokenId = accessToken.id;
+              LoopBackAuth.currentUserRole = accessToken.userRole;
               LoopBackAuth.rememberMe = response.config.params.rememberMe !== false;
               LoopBackAuth.save();
               return response.resource;
