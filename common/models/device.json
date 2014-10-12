@@ -1,7 +1,11 @@
 {
-  "name": "devices",
-  "plural": "devices",
+  "name": "device",
   "base": "PersistedModel",
+  "options": {
+    "mongodb": {
+      "collection": "devices"
+    }
+  },
   "properties": {
     "udid": {
       "type": "string"

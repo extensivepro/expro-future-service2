@@ -1,6 +1,11 @@
 {
-  "name": "members",
+  "name": "member",
   "base": "PersistedModel",
+  "options": {
+    "mongodb": {
+      "collection": "members"
+    }
+  },
   "properties": {
     "name": {
       "type": "string"

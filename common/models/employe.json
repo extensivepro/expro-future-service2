@@ -1,6 +1,11 @@
 {
-  "name": "shops",
+  "name": "employe",
   "base": "PersistedModel",
+  "options": {
+    "mongodb": {
+      "collection": "employes"
+    }
+  },
   "properties": {
     "name": {
       "type": "string"
@@ -8,51 +13,49 @@
     "code": {
       "type": "string"
     },
-    "merchantID": {
+    "shopID": {
       "type": "string"
     },
     "status": {
       "type": "string"
     },
-    "telephone": {
+    "role": {
       "type": "string"
     },
-    "address": {
+    "jobNumber": {
       "type": "string"
     },
-    "createdAt": {
+    "email": {
+      "type": "string"
+    },
+    "phone": {
+      "type": "string"
+    },
+    "idcard": {
+      "type": "string"
+    },
+    "leaveAt": {
       "type": "number"
     },
-    "closedAt": {
+    "createdAt": {
       "type": "number"
     },
     "updateAt": {
       "type": "number"
     },
-    "openRes": {
-      "type": "array"
+    "username": {
+      "type": "string"
     },
-    "location": {
-      "type": "object"
-    },
-    "sequenceNumber": {
-      "type": "number"
-    },
-    "printers": {
-      "type": "array"
+    "password": {
+      "type": "string"
     }
   },
   "validations": [],
   "relations": {
-    "merchant": {
+    "shop": {
       "type": "belongsTo",
-      "model": "merchants",
-      "foreignKey": "merchantID"
-    },
-    "devices": {
-      "type": "hasMany",
-      "model": "devices",
-      "foreignKey": "shop.id"
+      "model": "shops",
+      "foreignKey": "shopID"
     }
   },
   "acls": [],

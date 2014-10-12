@@ -3,11 +3,9 @@
     "name": "db",
     "connector": "memory"
   },
-  
   "futureDB": {
+    "database": "passpro-dev",
     "name": "futureDB",
-    "connector": "mongodb",
-    "database": "passpro-dev"
+    "connector": "mongodb"
   }
-   
 }

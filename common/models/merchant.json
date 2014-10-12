@@ -1,6 +1,11 @@
 {
-  "name": "merchants",
+  "name": "merchant",
   "base": "PersistedModel",
+  "options": {
+    "mongodb": {
+      "collection": "merchants"
+    }
+  },
   "properties": {
     "owner": {
       "type": "object"

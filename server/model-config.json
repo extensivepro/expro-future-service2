@@ -6,7 +6,8 @@
     ]
   },
   "User": {
-    "dataSource": "futureDB"
+    "dataSource": "futureDB",
+    "public": false
   },
   "AccessToken": {
     "dataSource": "futureDB",
@@ -24,24 +25,28 @@
     "dataSource": "futureDB",
     "public": false
   },
-  "members": {
+  "user": {
+    "dataSource": "db",
+    "public": true
+  },
+  "member": {
     "dataSource": "futureDB",
     "public": true
   },
-  "merchants": {
+  "merchant": {
     "dataSource": "futureDB",
     "public": true
   },
-  "devices": {
+  "device": {
     "dataSource": "futureDB",
     "public": true
   },
-  "shops": {
+  "shop": {
     "dataSource": "futureDB",
     "public": true
   },
-  "employes": {
+  "employe": {
     "dataSource": "futureDB",
     "public": true
-  }  
+  }
 }
