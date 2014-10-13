@@ -24,7 +24,7 @@
     "angular-ui-router": "^0.2.10",
     "bootstrap": "~3.2.0",
     "font-awesome": "~4.1.0",
-    "angular-resource": "~1.2.23",
+    "ef-services2": "https://github.com/extensivepro/bower-ef-services2.git",
     "moment": "~2.8.2",
     "angular-ui-utils": "~0.1.1",
     "angular-morph": "*"
