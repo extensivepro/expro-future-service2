@@ -29,7 +29,9 @@ app.controller('ApplicationCtrl', function ($scope, $rootScope, $modal, User) {
   }
   
   $scope.logout = function () {
-    $rootScope.$broadcast('AUTH_LOGOUT')
+    User.logout(function () {
+      $rootScope.$broadcast('AUTH_LOGOUT')
+    })
   }
 
   User.getCurrent(function (user) {
