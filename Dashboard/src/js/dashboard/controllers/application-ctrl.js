@@ -3,10 +3,8 @@
  * Global Level variable and function
  */
 
-app.controller('ApplicationCtrl', function ($scope, $modal, AuthService, AUTH_EVENTS) {
+app.controller('ApplicationCtrl', function ($scope, $modal, AUTH_EVENTS) {
   
-  AuthService.ensureHasCurrentUser();
-
   $scope.$on(AUTH_EVENTS.loginSuccess, function (user) {
     console.log('AUTH_EVENTS.loginSuccess------', user)
   })

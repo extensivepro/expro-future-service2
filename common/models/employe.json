@@ -54,7 +54,7 @@
   "relations": {
     "shop": {
       "type": "belongsTo",
-      "model": "shops",
+      "model": "shop",
       "foreignKey": "shopID"
     }
   },

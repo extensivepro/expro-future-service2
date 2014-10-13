@@ -1,9 +1,11 @@
 {
   "name": "expro-future-service2",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "main": "server/server.js",
   "scripts": {
     "pretest": "jshint .",
+    "syncdb": "sh server/test/fixtures/syncdata.sh",
+    "restoredb": "sh server/test/fixtures/restoredata.sh",
     "start": "node server/server.js"
   },
   "dependencies": {
@@ -34,5 +36,13 @@
     "future"
   ],
   "author": "extensivepro",
-  "license": "ISC"
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/extensivepro/expro-future-service2.git"
+  },
+  "bugs": {
+    "url": "https://github.com/extensivepro/expro-future-service2/issues"
+  },
+  "homepage": "https://github.com/extensivepro/expro-future-service2"
 }

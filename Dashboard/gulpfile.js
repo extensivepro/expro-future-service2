@@ -28,13 +28,6 @@ gulp.task('usemin', function() {
     .pipe(gulp.dest('../client/'));
 });
 
-gulp.task('lb-angular', function () {
-  return gulp.src('../server/server.js')
-    .pipe(loopbackAngular())
-    .pipe(rename('lb-services.js'))
-    .pipe(gulp.dest('../client/js'));
-})
-
 /**
  * Copy assets
  */
@@ -93,5 +86,5 @@ gulp.task('compile-less', function(){
       .pipe(gulp.dest('../client/css'));
 });
 
-gulp.task('build', ['usemin', 'copy-assets', 'lb-angular']);
+gulp.task('build', ['usemin', 'copy-assets']);
 gulp.task('default', ['build', 'webserver', 'livereload', 'watch']);

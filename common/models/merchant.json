@@ -60,7 +60,7 @@
   "relations": {
     "members": {
       "type": "hasMany",
-      "model": "members",
+      "model": "member",
       "foreignKey": "merchant.merchantID"
     }
   },

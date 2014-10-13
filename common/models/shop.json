@@ -51,12 +51,12 @@
   "relations": {
     "merchant": {
       "type": "belongsTo",
-      "model": "merchants",
+      "model": "merchant",
       "foreignKey": "merchantID"
     },
     "devices": {
       "type": "hasMany",
-      "model": "devices",
+      "model": "device",
       "foreignKey": "shop.id"
     }
   },

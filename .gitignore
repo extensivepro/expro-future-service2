@@ -1,3 +1,6 @@
 
 node_modules/
 bower_components/
+
+server/test/fixtures/passpro/*
+npm-debug.log
