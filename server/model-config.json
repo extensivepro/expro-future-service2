@@ -26,7 +26,7 @@
     "public": false
   },
   "user": {
-    "dataSource": "db",
+    "dataSource": "futureDB",
     "public": true
   },
   "member": {
