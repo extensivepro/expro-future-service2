@@ -1,8 +1,7 @@
 (function(){ 
 (function(window, angular, undefined) {'use strict';
 
-var urlBase = "http://0.0.0.0:3000/api";
-// var urlBase = "http://fankahui.com:3000/api";
+var urlBase = "http://fankahui.com:3000/api";
 var authHeader = 'authorization';
 
 /**
