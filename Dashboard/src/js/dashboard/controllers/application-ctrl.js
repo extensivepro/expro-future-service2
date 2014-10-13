@@ -45,13 +45,17 @@ var LoginModalInstanceCtrl = function ($scope, $modalInstance, $rootScope, User)
   $scope.credentials = {
     username: '13357828347',
     password: '123456'
-  };
+  }
+  
+  $scope.alerts = []
+	
   $scope.tryLogin = function (credentials) {
     User.login($scope.credentials, function (user) {
       $rootScope.$broadcast('AUTH_LOGIN', user);
+      $scope.alerts.push({type: 'success', msg: '登陆成功'})
       $modalInstance.close(user);
-    }, function () {
-      $rootScope.$broadcast('AUTH_LOGOUT');
+    }, function (res) {
+      $scope.alerts.push({type: 'danger', msg: '用户名或密码不正确！'})
     })
   } 
 }

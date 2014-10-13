@@ -25,6 +25,9 @@
   </form>
 </div>
 <div class="modal-footer">
+  <div class="col-xs-12" data-ng-show="alerts.length">
+    <alert data-ng-repeat="alert in alerts" type="{{alert.type}}">{{alert.msg}}</alert>
+  </div>
   <div class="col-sm-12">
     <button class="btn btn-primary btn-lg btn-block" ng-click="tryLogin()">登录</button>
   </div>
