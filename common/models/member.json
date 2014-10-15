@@ -50,7 +50,7 @@
       "type": "number"
     },
     "account": {
-      "type": "object"
+      "type": "account"
     },
     "registerShopID": {
       "type": "string"
