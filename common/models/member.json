@@ -64,11 +64,6 @@
   },
   "validations": [],
   "relations": {
-    "merchant2": {
-      "type": "belongsTo",
-      "model": "merchant",
-      "foreignKey": "merchant.merchantID"
-    }
   },
   "acls": [],
   "methods": []

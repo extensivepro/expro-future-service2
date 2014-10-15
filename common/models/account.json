@@ -1,0 +1,14 @@
+{
+  "name": "account",
+  "base": "PersistedModel",
+  "options": {
+    "mongodb": {
+      "collection": "accounts"
+    }
+  },
+  "properties": {},
+  "validations": [],
+  "relations": {},
+  "acls": [],
+  "methods": []
+}

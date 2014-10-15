@@ -58,11 +58,6 @@
   },
   "validations": [],
   "relations": {
-    "members": {
-      "type": "hasMany",
-      "model": "member",
-      "foreignKey": "merchant.merchantID"
-    }
   },
   "acls": [],
   "methods": []

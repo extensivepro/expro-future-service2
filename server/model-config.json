@@ -48,5 +48,9 @@
   "employe": {
     "dataSource": "futureDB",
     "public": true
+  },
+  "account": {
+    "dataSource": "futureDB",
+    "public": false
   }
 }
