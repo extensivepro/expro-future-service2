@@ -10,22 +10,26 @@ app.config(function($stateProvider, $urlRouterProvider, USER_ROLES) {
   // Application routes
   $stateProvider
     .state('index', {
-        url: '/',
-        templateUrl: 'partials/dashboard.html',
-        data: {
-          authorizedRoles: [USER_ROLES.admin, USER_ROLES.editor]
-        }
+      url: '/',
+      templateUrl: 'partials/dashboard.html',
+      data: {
+        authorizedRoles: [USER_ROLES.admin, USER_ROLES.editor]
+      }
     })
     .state('merchants', {
-        url: '/merchants', 
-        templateUrl: 'partials/merchants.html'
+      url: '/merchants', 
+      templateUrl: 'partials/merchants.html'
     })
     .state('members', {
-        url: '/members',
-        templateUrl: 'partials/members.html'
+      url: '/members',
+      templateUrl: 'partials/members.html'
     })
     .state('shops', {
-        url: '/shops',
-        templateUrl: 'partials/shops.html'
+      url: '/shops',
+      templateUrl: 'partials/shops.html'
+    })
+    .state('employes', {
+      url: '/employes',
+      templateUrl: 'partials/employes.html'
     })
 });
