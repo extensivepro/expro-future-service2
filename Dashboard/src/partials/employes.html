@@ -18,12 +18,14 @@
           <thead>
             <tr>
               <th>ID</th>
+              <th>用户名</th>
               <th>姓名</th>
               <th>编号</th>
               <th>工号</th>
               <th>电话</th>
               <th>身份证</th>
               <th class="text-center">商户</th>
+              <th class="text-center">门店</th>
               <th>状态</th>
               <th class="text-right">创建时间</th>
             </tr>
@@ -31,12 +33,14 @@
           <tbody>
             <tr ng-repeat="entity in enitities">
               <td>{{entity.id}}</td>
+              <td>{{entity.username}}</td>
               <td>{{entity.name}}</td>
               <td>{{entity.code}}</td>
               <td>{{entity.jobNumber}}</td>
               <td>{{entity.phone}}</td>
               <td>{{entity.idcard}}</td>
               <td class="text-center">{{entity.shop.merchant.name}}</td>
+              <td class="text-center">{{entity.shop.name}}</td>
               <td>{{entity.status | uppercase}}</td>
               <td class="text-right">{{dateFormat(entity.createdAt)}}</td>
             </tr>
