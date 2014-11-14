@@ -52,6 +52,11 @@
     "pointRule": {
       "type": "object"
     },
+    "masterPhone": {
+      "type": "number",
+      "required": true,
+      "length": 11
+    },
     "updateAt": {
       "type": "number"
     }
