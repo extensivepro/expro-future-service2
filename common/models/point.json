@@ -1,0 +1,40 @@
+{
+  "name": "point",
+  "base": "PersistedModel",
+  "options": {
+    "mongodb": {
+      "collection": "points"
+    }
+  },
+  "properties": {
+    "point": {
+      "type": "number",
+      "required": true
+    },
+    "memberID": {
+      "type": "string",
+      "required": true
+    },
+    "agentID": {
+      "type": "string",
+      "required": true
+    },
+    "reason": {
+      "type": "string",
+      "required": true
+    },
+    "postPoint": {
+      "type": "number"
+    }
+  },
+  "validations": [],
+  "relations": {
+    "agent": {
+      "type": "belongsTo",
+      "model": "employe",
+      "foreignKey": "agentID"
+    }
+  },
+  "acls": [],
+  "methods": []
+}

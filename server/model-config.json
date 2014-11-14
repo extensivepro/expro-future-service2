@@ -49,6 +49,14 @@
     "dataSource": "futureDB",
     "public": true
   },
+  "point": {
+    "dataSource": "futureDB",
+    "public": true
+  },
+  "item": {
+    "dataSource": "futureDB",
+    "public": true
+  },
   "account": {
     "dataSource": "futureDB",
     "public": false

@@ -50,6 +50,14 @@ app.config(function($stateProvider, $urlRouterProvider, USER_ROLES) {
       url: '/employes',
       templateUrl: 'partials/employes.html'
     })
+    .state('points', {
+      url: '/points',
+      templateUrl: 'partials/points.html'
+    })
+    .state('items', {
+      url: '/items',
+      templateUrl: 'partials/items.html'
+    })
 });
 
 /**
@@ -364,6 +372,24 @@ var CreateEmployeModalInstanceCtrl = function ($scope, $modalInstance, $rootScop
     $scope.entity.code = $scope.entity.phone
   }
 }
+/**
+ * Points Controller
+ */
+app.controller('PointsCtrl', function PointsCtrl($scope, Point, $controller) {
+  $controller('ListCtrl', {$scope: $scope})
+  $scope.resource = Point
+  $scope.search.orFields = ['member.name', 'phone']
+  $scope.includes = ['agent']
+})
+/**
+ * Items Controller
+ */
+app.controller('ItemsCtrl', function ItemsCtrl($scope, Item, $controller) {
+  $controller('ListCtrl', {$scope: $scope})
+  $scope.resource = Item
+  $scope.search.orFields = ['name', 'phone']
+  $scope.includes = ['merchant']
+})
 /**
  * Loading Directive
  * @see http://tobiasahlin.com/spinkit/

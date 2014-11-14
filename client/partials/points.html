@@ -1,0 +1,48 @@
+<div class="row" ng-controller="PointsCtrl" ng-init='init()'>
+  <div class="widget">
+    <div class="widget-header">
+      <div class="col-md-2">
+        <i class="fa fa-users"></i> 会员
+        <a ng-click="create()" class="btn"><i class="fa fa-plus"></i> 新增 </a>
+      </div>
+      <div class="col-md-10">
+        <a ng-click="fetch()" class="pull-right btn"><i class="fa fa-refresh"></i> 刷新 </a>
+        <a ng-click="fetch()" class="pull-right btn"><i class="fa fa-search"></i> 搜索 </a>
+        <input type="text" placeholder="Search" class="form-control input-sm pull-right" ng-model="search.text" ui-keypress="{ 13 : 'fetch()' }" />
+      </div>
+      <div class="clearfix"></div>
+    </div>
+    <div class="widget-body no-padding">
+      <div class="table-responsive">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>会员</th>
+              <th>积分</th>
+              <th>累积积分</th>
+              <th>累计积分</th>
+              <th class="text-center">商户</th>
+              <th>积分原因</th>
+              <th>经手人</th>
+              <th class="text-right">创建时间</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr ng-repeat="entity in enitities">
+              <td>{{entity.id}}</td>
+              <td>{{entity.member.name}}</td>
+              <td>{{entity.point}}</td>
+              <td>{{entity.postTotalPoint}}</td>
+              <td>{{entity.postPoint}}</td>
+              <td class="text-center">{{entity.member.merchant.name}}</td>
+              <td>{{entity.reason}}</td>
+              <td>{{entity.agent.name}}</td>
+              <td class="text-right">{{dateFormat(entity.createdAt)}}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>  
+</div>

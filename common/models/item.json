@@ -1,0 +1,20 @@
+{
+  "name": "item",
+  "base": "PersistedModel",
+  "options": {
+    "mongodb": {
+      "collection": "items"
+    }
+  },
+  "properties": {},
+  "validations": [],
+  "relations": {
+    "merchant": {
+      "type": "belongsTo",
+      "model": "merchant",
+      "foreignKey": "merchantID"
+    }
+  },
+  "acls": [],
+  "methods": []
+}
