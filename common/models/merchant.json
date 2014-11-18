@@ -53,7 +53,7 @@
       "type": "object"
     },
     "masterPhone": {
-      "type": "number",
+      "type": "string",
       "required": true,
       "length": 11
     },

@@ -12,11 +12,12 @@ module.exports = function(Member) {
     next()
   }
   
-  Member.afterRemote('create', function (ctx, member, next) {
+  Member.afterCreate = function (next) {
+    var member = this
     Member.app.models.Account.create({ownerID:member.id}, function (error, account) {
       member.account = account
       member.save()
       next()
     })
-  })
+  }
 }

@@ -65,9 +65,8 @@ var LoginModalInstanceCtrl = function ($scope, $modalInstance, $rootScope, User)
   
   $scope.tryRegister = function (credentials) {
     $scope.alerts = []
-    credentials.email = credentials.username+"@"+credentials.username+".com"
+    credentials.email = credentials.username+"@example.com"
     User.create(credentials,function (user) {
-      console.log(user)
       $scope.alerts.push({type: 'success', msg: '注册成功'})
       $scope.tryLogin(credentials)
     }, function (res) {
