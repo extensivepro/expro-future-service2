@@ -12,9 +12,10 @@ $ npm start
 
 ## TODO
 
-- Register merchant through wechat or sms, anyone can do.
+- Register owner of merchant by masterPhone and validate by sms, anyone can do.
+- Create merchant by owner user, masterPhone as contact phone of merchant.
 - Automatic create a shop which belong to merchant.
-- Add new employe user for shop.
+- Add new employe for shop, username: employePhone@masterPhone.com.
 - Login as employe.
 - Add new member for merchant and account meanwhile.
 - Accumulate point for member.
