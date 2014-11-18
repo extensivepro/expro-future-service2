@@ -1,6 +1,7 @@
 {
   "name": "user",
   "base": "User",
+  "realmDelimiter": ":",
   "properties": {},
   "validations": [],
   "relations": {},

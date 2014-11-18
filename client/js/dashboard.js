@@ -107,6 +107,7 @@ app.controller('ApplicationCtrl', function ($scope, $rootScope, $modal, User) {
 var LoginModalInstanceCtrl = function ($scope, $modalInstance, $rootScope, User) {
 
   $scope.credentials = {
+    realm: 'owner',
     username: '13357828347',
     password: '123456'
   }
@@ -114,12 +115,25 @@ var LoginModalInstanceCtrl = function ($scope, $modalInstance, $rootScope, User)
   $scope.alerts = []
 	
   $scope.tryLogin = function (credentials) {
+    $scope.alerts = []
     User.login($scope.credentials, function (user) {
       $rootScope.$broadcast('AUTH_LOGIN', user);
       $scope.alerts.push({type: 'success', msg: '登陆成功'})
       $modalInstance.close(user);
     }, function (res) {
       $scope.alerts.push({type: 'danger', msg: '用户名或密码不正确！'})
+    })
+  }
+  
+  $scope.tryRegister = function (credentials) {
+    $scope.alerts = []
+    credentials.email = credentials.username+"@"+credentials.username+".com"
+    User.create(credentials,function (user) {
+      console.log(user)
+      $scope.alerts.push({type: 'success', msg: '注册成功'})
+      $scope.tryLogin(credentials)
+    }, function (res) {
+      $scope.alerts.push({type: 'danger', msg: '注册用户失败'})      
     })
   } 
 }
