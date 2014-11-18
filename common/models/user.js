@@ -1,7 +1,6 @@
 module.exports = function(User) {
   
   User.beforeCreate = function (next, user) {
-    console.log(user)
     
     User.findOne({where:{realm:user.realm, username:user.username}}, function (err, theUser) {
       if(theUser) {
