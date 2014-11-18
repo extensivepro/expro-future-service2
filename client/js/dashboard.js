@@ -107,6 +107,7 @@ app.controller('ApplicationCtrl', function ($scope, $rootScope, $modal, User) {
 var LoginModalInstanceCtrl = function ($scope, $modalInstance, $rootScope, User) {
 
   $scope.credentials = {
+    "name": '商户业主',
     realm: 'owner',
     username: '13357828347',
     password: '123456'
@@ -322,6 +323,7 @@ app.controller('MerchantsCtrl', function MerchantsCtrl($scope, Merchant, $contro
   $controller('ListCtrl', {$scope: $scope})
   $scope.resource = Merchant
   $scope.search.orFields = ['name', 'phone']
+  $scope.includes = ['merchantOwner']
 
   $scope.create = function () {
     var modalInstance = $modal.open({
@@ -342,13 +344,14 @@ app.controller('MerchantsCtrl', function MerchantsCtrl($scope, Merchant, $contro
 var CreateMerchantModalInstanceCtrl = function ($scope, $modalInstance, $rootScope, Merchant) {
 
   $scope.entity = {
-    masterPhone: $rootScope.currentUser.username,
-    telephone: $rootScope.currentUser.username,
+    ownerID: $scope.currentUser.id,
+    masterPhone: $scope.currentUser.username,
+    telephone: $scope.currentUser.username,
     fullName: "泛盈信息科技有限公司",
     "name": "泛盈科技"
   }
   
-  console.log($rootScope.currentUser)
+  console.log($scope.currentUser)
   
   $scope.alerts = []
 	

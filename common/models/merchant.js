@@ -1,5 +1,18 @@
 module.exports = function(Merchant) {
   
+  Merchant.beforeRemote('create', function (ctx, unused, next) {
+    if (ctx.req.accessToken) {
+      Merchant.app.models.User.findById(ctx.req.accessToken.userId, function (err, user) {
+        ctx.req.body.owner = user;
+        next()
+      })
+    } else {
+      var error = new Error('unauthorized, must be logged in to create merchant')
+      error.status = 401
+      next(error)
+    }
+  })
+  
   Merchant.beforeCreate = function (next, merchant) {
     Merchant.findOne({
       where: {

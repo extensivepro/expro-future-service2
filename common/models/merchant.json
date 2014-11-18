@@ -31,7 +31,8 @@
     "zip": {
       "type": "string"
     },
-    "url": {
+    "ownerID": {
+      "required": true,
       "type": "string"
     },
     "newestDeviceCode": {
@@ -62,7 +63,13 @@
     }
   },
   "validations": [],
-  "relations": {},
+  "relations": {
+    "merchantOwner": {
+      "type": "belongsTo",
+      "model": "user",
+      "foreignKey": "ownerID"
+    }
+  },
   "acls": [],
   "methods": []
 }

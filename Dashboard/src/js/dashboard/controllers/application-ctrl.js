@@ -45,6 +45,7 @@ app.controller('ApplicationCtrl', function ($scope, $rootScope, $modal, User) {
 var LoginModalInstanceCtrl = function ($scope, $modalInstance, $rootScope, User) {
 
   $scope.credentials = {
+    "name": '商户业主',
     realm: 'owner',
     username: '13357828347',
     password: '123456'
