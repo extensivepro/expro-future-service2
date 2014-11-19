@@ -64,7 +64,9 @@ module.exports = function(Merchant) {
           realm: 'employe.'+merchant.masterPhone,
           username: employe.phone,
           password: "123456",
-          email: employe.phone+'@example.com'
+          email: employe.phone+'@example.com',
+          employeID: employe.id,
+          "name": employe.phone+"@employe."+merchant.masterPhone
         }, function (error, user) {
           next(error)
         })

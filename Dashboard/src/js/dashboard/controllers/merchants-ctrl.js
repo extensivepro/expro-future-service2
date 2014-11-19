@@ -5,7 +5,7 @@ app.controller('MerchantsCtrl', function MerchantsCtrl($scope, Merchant, $contro
   $controller('ListCtrl', {$scope: $scope})
   $scope.resource = Merchant
   $scope.search.orFields = ['name', 'phone']
-  $scope.includes = ['merchantOwner']
+  // $scope.includes = ['merchantOwner']
 
   $scope.create = function () {
     var modalInstance = $modal.open({

@@ -56,6 +56,11 @@
       "type": "belongsTo",
       "model": "shop",
       "foreignKey": "shopID"
+    },
+    "merchant": {
+      "type": "belongsTo",
+      "model": "merchant",
+      "foreignKey": "merchantID"
     }
   },
   "acls": [],

@@ -22,19 +22,16 @@ app.controller('MembersCtrl', function MembersCtrl($scope, Member, $controller, 
   
 })
 
-var CreateMemberModalInstanceCtrl = function ($scope, $modalInstance, $rootScope, Member) {
+var CreateMemberModalInstanceCtrl = function ($scope, $modalInstance, $rootScope, Member, Employe) {
 
   $scope.entity = {
-    merchant: {
-      merchantID: "e20dccdf039b3874",
-      fullName: "泛盈信息科技有限公司",
-      "name": "泛盈科技"
-    }
+    merchantID: "e20dccdf039b3874"
   }
   
   $scope.alerts = []
 	
   $scope.tryCreate = function () {
+    $scope.alerts = []
     Member.create($scope.entity, function (member) {
       $modalInstance.close(member);
     }, function (res) {
@@ -49,4 +46,16 @@ var CreateMemberModalInstanceCtrl = function ($scope, $modalInstance, $rootScope
   $scope.blurCb = function (evt) {
     $scope.entity.code = $scope.entity.phone
   }
+  
+  Employe.findOne({
+    filter: {
+      where: {id: $scope.currentUser.employeID},
+      include: 'merchant'
+    }
+  }, function (employe) {
+    $scope.merchant = employe.merchant
+    $scope.entity.merchantID = employe.merchant.id
+  }, function (res) {
+    $scope.alerts.push({type: 'warning', msg: '没有找到雇员对应的商户'})
+  })
 }

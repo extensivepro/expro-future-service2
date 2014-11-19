@@ -1,9 +1,15 @@
 <div class="row" ng-controller="MerchantsCtrl" ng-init='init()'>
   <div class="widget">
     <div class="widget-header">
-      <i class="fa fa-lg fa-building"></i> 商户
-      <a ng-click="create()" class="btn"><i class="fa fa-plus"></i> 新增 </a>
-      <input type="text" placeholder="Search" class="form-control input-sm pull-right" ng-model="search.text" ui-keypress="{ 13 : 'fetch()' }" />
+      <div class="col-md-2">
+        <i class="fa fa-lg fa-building"></i> 商户
+        <a ng-click="create()" class="btn"><i class="fa fa-plus"></i> 新增 </a>
+      </div>
+      <div class="col-md-10">
+        <a ng-click="fetch()" class="pull-right btn"><i class="fa fa-refresh"></i> 刷新 </a>
+        <a ng-click="fetch()" class="pull-right btn"><i class="fa fa-search"></i> 搜索 </a>
+        <input type="text" placeholder="Search" class="form-control input-sm pull-right" ng-model="search.text" ui-keypress="{ 13 : 'fetch()' }" />
+      </div>
       <div class="clearfix"></div>
     </div>
     <div class="widget-body no-padding">

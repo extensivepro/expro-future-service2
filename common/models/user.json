@@ -2,9 +2,16 @@
   "name": "user",
   "base": "User",
   "realmDelimiter": ":",
+  "realmRequired": false,
   "properties": {},
   "validations": [],
-  "relations": {},
+  "relations": {
+    "employe": {
+      "type": "belongsTo",
+      "model": "employe",
+      "foreignKey": "employeID"
+    }
+  },
   "acls": [],
   "methods": []
 }

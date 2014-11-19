@@ -64,11 +64,6 @@
   },
   "validations": [],
   "relations": {
-    "merchantOwner": {
-      "type": "belongsTo",
-      "model": "user",
-      "foreignKey": "ownerID"
-    }
   },
   "acls": [],
   "methods": []

@@ -2,8 +2,8 @@ module.exports = function(User) {
   
   User.beforeCreate = function (next, user) {
     
-    User.findOne({where:{realm:user.realm, username:user.username}}, function (err, theUser) {
-      if(theUser) {
+    User.findOne({where:{and:[{realm:user.realm}, {username:user.username}]}}, function (err, theUser) {
+      if(theUser && theUser.realm === user.realm) {
         err = new Error('username already exist')
         err.status = 400
         next(err)
