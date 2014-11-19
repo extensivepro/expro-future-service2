@@ -8,7 +8,7 @@ module.exports = function(User) {
         err.status = 400
         next(err)
       } else {
-        var now = Math.floor(Date.now()/1000)
+        var now = Date.now()
         user.created = now
         user.lastUpdated = now
         user.status = 'active'

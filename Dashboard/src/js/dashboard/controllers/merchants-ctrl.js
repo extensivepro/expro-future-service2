@@ -25,12 +25,13 @@ app.controller('MerchantsCtrl', function MerchantsCtrl($scope, Merchant, $contro
 
 var CreateMerchantModalInstanceCtrl = function ($scope, $modalInstance, $rootScope, Merchant) {
 
+  var now = Date.now()
   $scope.entity = {
     ownerID: $scope.currentUser.id,
     masterPhone: $scope.currentUser.username,
     telephone: $scope.currentUser.username,
-    fullName: "泛盈信息科技有限公司",
-    "name": "泛盈科技"
+    fullName: "泛盈信息科技有限公司"+now,
+    "name": "泛盈科技"+now
   }
   
   console.log($scope.currentUser)

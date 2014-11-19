@@ -45,8 +45,7 @@ app.controller('ApplicationCtrl', function ($scope, $rootScope, $modal, User) {
 var LoginModalInstanceCtrl = function ($scope, $modalInstance, $rootScope, User) {
 
   $scope.credentials = {
-    "name": '商户业主',
-    realm: 'owner',
+    realm: 'employe.13357828347',
     username: '13357828347',
     password: '123456'
   }
@@ -55,7 +54,7 @@ var LoginModalInstanceCtrl = function ($scope, $modalInstance, $rootScope, User)
 	
   $scope.tryLogin = function (credentials) {
     $scope.alerts = []
-    User.login($scope.credentials, function (user) {
+    User.login(credentials, function (user) {
       $rootScope.$broadcast('AUTH_LOGIN', user);
       $scope.alerts.push({type: 'success', msg: '登陆成功'})
       $modalInstance.close(user);
@@ -66,6 +65,7 @@ var LoginModalInstanceCtrl = function ($scope, $modalInstance, $rootScope, User)
   
   $scope.tryRegister = function (credentials) {
     $scope.alerts = []
+    credentials.name = credentials.username
     credentials.email = credentials.username+"@example.com"
     User.create(credentials,function (user) {
       $scope.alerts.push({type: 'success', msg: '注册成功'})
