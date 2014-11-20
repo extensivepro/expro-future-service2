@@ -1,7 +1,8 @@
 /**
  * Master Controller
  */
-app.controller('MasterCtrl', function MasterCtrl($scope, $cookieStore) {
+app.controller('MasterCtrl', function MasterCtrl($scope, $rootScope, $cookieStore) {
+  
     /**
      * Sidebar Toggle & Cookie Control
      *
@@ -43,14 +44,6 @@ app.controller('MasterCtrl', function MasterCtrl($scope, $cookieStore) {
 
         $cookieStore.put('toggle', $scope.toggle);
     };
-    
-    $scope.loginform = {
-      // trigger: 'click',
-      closeEl: '.close-x',
-      modal: {
-        templateUrl: 'partials/loginform.html'
-      }
-    };
-
+        
     window.onresize = function() { $scope.$apply(); };
 });

@@ -21,17 +21,21 @@
               <th>姓名</th>
               <th>编号</th>
               <th>电话</th>
+              <th>累积积分</th>
+              <th>累计积分</th>
               <th class="text-center">商户</th>
               <th>状态</th>
               <th class="text-right">创建时间</th>
             </tr>
           </thead>
           <tbody>
-            <tr ng-repeat="entity in enitities">
+            <tr ng-repeat="entity in enitities" ng-click="showDetail(entity)" class="clcikable">
               <td>{{entity.id}}</td>
               <td>{{entity.name}}</td>
               <td>{{entity.code}}</td>
               <td>{{entity.phone}}</td>
+              <td>{{entity.postPoint}}</td>
+              <td>{{entity.postTotalPoint}}</td>
               <td class="text-center">{{entity.merchant.name}}</td>
               <td>{{entity.status | uppercase}}</td>
               <td class="text-right">{{dateFormat(entity.createdAt)}}</td>

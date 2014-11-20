@@ -72,6 +72,7 @@ app.controller('ApplicationCtrl', function ($scope, $rootScope, $modal, User) {
   });
 
   $rootScope.$on('AUTH_LOGOUT', function (d, data) {
+    $rootScope.currentUser = {name:"未登录"}
     login()
   })
   
@@ -192,7 +193,8 @@ app.controller('ListCtrl', function ListCtrl($scope) {
 /**
  * Master Controller
  */
-app.controller('MasterCtrl', function MasterCtrl($scope, $cookieStore) {
+app.controller('MasterCtrl', function MasterCtrl($scope, $rootScope, $cookieStore) {
+  
     /**
      * Sidebar Toggle & Cookie Control
      *
@@ -234,15 +236,7 @@ app.controller('MasterCtrl', function MasterCtrl($scope, $cookieStore) {
 
         $cookieStore.put('toggle', $scope.toggle);
     };
-    
-    $scope.loginform = {
-      // trigger: 'click',
-      closeEl: '.close-x',
-      modal: {
-        templateUrl: 'partials/loginform.html'
-      }
-    };
-
+        
     window.onresize = function() { $scope.$apply(); };
 });
 /**
@@ -277,6 +271,25 @@ app.controller('MembersCtrl', function MembersCtrl($scope, Member, $controller, 
       templateUrl: 'partials/member-add.html',
       controller: CreateMemberModalInstanceCtrl,
       size: 'lg'
+    });
+
+    modalInstance.result.then(function (member) {
+      $scope.fetch()
+    }, function () {
+      console.info('Modal dismissed at: ' + new Date());
+    });
+  }
+  
+  $scope.showDetail = function (entity) {
+    var modalInstance = $modal.open({
+      templateUrl: 'partials/member-detail.html',
+      controller: MemberDetailModalInstanceCtrl,
+      size: 'lg',
+      resolve: {
+        entity: function () {
+          return entity
+        }
+      }
     });
 
     modalInstance.result.then(function (member) {
@@ -324,6 +337,54 @@ var CreateMemberModalInstanceCtrl = function ($scope, $modalInstance, $rootScope
   }, function (res) {
     $scope.alerts.push({type: 'warning', msg: '没有找到雇员对应的商户'})
   })
+}
+
+var MemberDetailModalInstanceCtrl = function ($scope, $modalInstance, $rootScope, entity, Point) {
+  
+  $scope.entity = entity
+  
+  $scope.status = {
+    isopen: false
+  }
+  
+  $scope.pointValue = 16
+  
+  $scope.cancel = function () {
+    $modalInstance.dismiss()
+  }
+  
+  $scope.save = function () {
+    $modalInstance.dismiss()
+  }
+  
+  $scope.toggleDropdown = function($event) {
+    $event.preventDefault()
+    $event.stopPropagation()
+    $scope.status.isopen = !$scope.status.isopen
+  }
+  
+  var operatePoint = function (point, reason) {
+    Point.create({
+      point: point,
+      memberID: entity.id,
+      agentID: $scope.currentUser.employeID,
+      reason: reason
+    }, function (point) {
+      entity.postPoint = point.postPoint
+      entity.postTotalPoint = point.postTotalPoint
+    }, function (res) {
+      $scope.alerts.push({type: 'danger', msg: '积分操作失败'})
+    })
+  }
+  
+  $scope.accumulatePoint = function () {
+    operatePoint($scope.pointValue, "手动累积")
+  }
+  
+  $scope.exchangeGift = function () {
+    operatePoint(0-$scope.pointValue, "手动兑换积分")
+  }
+  
 }
 /**
  * Merchants Controller

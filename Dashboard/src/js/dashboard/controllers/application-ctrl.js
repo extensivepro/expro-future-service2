@@ -10,6 +10,7 @@ app.controller('ApplicationCtrl', function ($scope, $rootScope, $modal, User) {
   });
 
   $rootScope.$on('AUTH_LOGOUT', function (d, data) {
+    $rootScope.currentUser = {name:"未登录"}
     login()
   })
   

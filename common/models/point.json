@@ -22,9 +22,6 @@
     "reason": {
       "type": "string",
       "required": true
-    },
-    "postPoint": {
-      "type": "number"
     }
   },
   "validations": [],
