@@ -12,14 +12,14 @@ $ npm start
 
 ## TODO
 
-- Register owner of merchant by masterPhone and validate by sms, anyone can do.
-- Create merchant by owner user, masterPhone as contact phone of merchant.
-- Automatic create a shop which belong to merchant.
-- Add new employe for shop, realm is masterPhone, username is employePhone.
-- Login as employe.
-- Add new member for merchant and account meanwhile.
-- Accumulate point for member.
-- Exchange gift by points.
-- Decrease point manual.
+- :heavy_check_mark: Register owner of merchant by masterPhone and validate by sms, anyone can do.
+- :heavy_check_mark: Create merchant by owner user, masterPhone as contact phone of merchant.
+- :heavy_check_mark: Automatic create a shop which belong to merchant.
+- :heavy_check_mark: Add new employe for shop, realm is masterPhone, username is employePhone.
+- :heavy_check_mark: Login as employe.
+- :heavy_check_mark: Add new member for merchant and account meanwhile.
+- :heavy_check_mark: Accumulate point for member.
+- :heavy_check_mark: Exchange gift by points.
+- <del>Decrease point manual.</del>
 - Perpay amount into account.
 - Decrease amount of account manual.
