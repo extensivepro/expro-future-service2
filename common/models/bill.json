@@ -1,0 +1,51 @@
+{
+  "name": "bill",
+  "base": "PersistedModel",
+  "options": {
+    "mongodb": {
+      "collection": "bills"
+    }
+  },
+  "properties": {
+    "dealType": {
+      "type": "string",
+      "required": true
+    },
+    "amount": {
+      "type": "number",
+      "required": true
+    },
+    "agentID": {
+      "type": "string",
+      "required": true
+    },
+    "shopID": {
+      "type": "string",
+      "required": true
+    },
+    "merchantID": {
+      "type": "string",
+      "required": true
+    }
+  },
+  "validations": [],
+  "relations": {
+    "merchant": {
+      "type": "belongsTo",
+      "model": "merchant",
+      "foreignKey": "merchantID"
+    },
+    "shop": {
+      "type": "belongsTo",
+      "model": "shop",
+      "foreignKey": "shopID"
+    },
+    "agent": {
+      "type": "belongsTo",
+      "model": "employe",
+      "foreignKey": "agentID"
+    }
+  },
+  "acls": [],
+  "methods": []
+}

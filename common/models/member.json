@@ -53,8 +53,8 @@
       "type": "account"
     },
     "merchantID": {
-      "required": true,
-      "type": "string"
+      "type": "string",
+      "required": true
     },
     "updateAt": {
       "type": "number"

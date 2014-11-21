@@ -60,5 +60,29 @@
   "account": {
     "dataSource": "futureDB",
     "public": false
+  },
+  "deal": {
+    "dataSource": "futureDB",
+    "public": true
+  },
+  "bill": {
+    "dataSource": "futureDB",
+    "public": true
+  },
+  "inventory": {
+    "dataSource": "futureDB",
+    "public": true
+  },
+  "order": {
+    "dataSource": "futureDB",
+    "public": true
+  },
+  "return": {
+    "dataSource": "futureDB",
+    "public": true
+  },
+  "sku": {
+    "dataSource": "futureDB",
+    "public": true
   }
 }
