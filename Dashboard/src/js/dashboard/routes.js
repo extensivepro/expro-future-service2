@@ -44,4 +44,8 @@ app.config(function($stateProvider, $urlRouterProvider, USER_ROLES) {
       url: '/bills',
       templateUrl: 'partials/bills.html'
     })
+    .state('accounts', {
+      url: '/accounts',
+      templateUrl: 'partials/accounts.html'
+    })
 });

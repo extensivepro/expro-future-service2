@@ -1,0 +1,51 @@
+<div class="row" ng-controller="AccountsCtrl" ng-init='init()'>
+  <div class="widget">
+    <div class="widget-header">
+      <div class="col-md-2">
+        <i class="fa fa-lg fa-list"></i> 储值账号
+      </div>
+      <div class="col-md-10">
+        <a ng-click="fetch()" class="pull-right btn"><i class="fa fa-refresh"></i> 刷新 </a>
+        <a ng-click="fetch()" class="pull-right btn"><i class="fa fa-search"></i> 搜索 </a>
+        <input type="text" placeholder="Search" class="form-control input-sm pull-right" ng-model="search.text" ui-keypress="{ 13 : 'fetch()' }" />
+      </div>
+      <div class="clearfix"></div>
+    </div>
+    <div class="widget-body no-padding">
+      <div class="table-responsive">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>账单号</th>
+              <th>金额</th>
+              <th>折扣</th>
+              <th>现金支付</th>
+              <th>储值支付</th>
+              <th>交易类型</th>
+              <th class="text-center">商户</th>
+              <th class="text-center">门店</th>
+              <th>经手人</th>
+              <th class="text-right">创建时间</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr ng-repeat="entity in enitities">
+              <td>{{entity.id}}</td>
+              <td>{{entity.billNumber}}</td>
+              <td>{{entity.amount}}</td>
+              <td>{{entity.discountAmount}}</td>
+              <td>{{entity.cashSettlement.amount}}</td>
+              <td>{{entity.memberSettlement.amount}}</td>
+              <td>{{entity.dealType | uppercase}}</td>
+              <td class="text-center">{{entity.merchant.name}}</td>
+              <td class="text-center">{{entity.shop.name}}</td>
+              <td>{{entity.agent.name}}</td>
+              <td class="text-right">{{dateFormat(entity.createdAt)}}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>  
+</div>

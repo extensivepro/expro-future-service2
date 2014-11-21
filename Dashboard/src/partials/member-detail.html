@@ -29,7 +29,7 @@
     </div>
     <hr />
     <div class="form-group">
-      <label class="col-sm-2 control-label">累积积分</label>
+      <label class="col-sm-2 control-label">当前积分</label>
       <div class="col-sm-5">
         <p class="form-control-static">{{entity.postPoint}}</p>
       </div>
@@ -37,7 +37,7 @@
         <div class="input-group">
           <input type="text" class="form-control" ng-model="pointValue">
           <div class="input-group-btn">
-            <div class="btn-group" dropdown is-open="status.isopen">
+            <div class="btn-group" dropdown is-open="status.isPointOpen">
               <button type="button" class="btn btn-default dropdown-toggle" dropdown-toggle>
                 积分操作 <span class="caret"></span>
               </button>
@@ -56,6 +56,31 @@
       <label class="col-sm-2 control-label">累计积分</label>
       <div class="col-sm-10">
         <p class="form-control-static">{{entity.postTotalPoint}}</p>
+      </div>
+    </div>
+    <hr />
+    <div class="form-group">
+      <label class="col-sm-2 control-label">储值余额</label>
+      <div class="col-sm-5">
+        <p class="form-control-static">{{entity.account.balance/100 | currency:"￥"}}</p>
+      </div>
+      <div class="col-sm-5">
+        <div class="input-group">
+          <input type="text" class="form-control" ng-model="prepayValue">
+          <div class="input-group-btn">
+            <div class="btn-group" dropdown is-open="status.isPrepayOpen">
+              <button type="button" class="btn btn-default dropdown-toggle" dropdown-toggle>
+                储值操作 <span class="caret"></span>
+              </button>
+              <ul class="dropdown-menu" role="menu">
+                <li><a ng-click="accumulatePoint()">充值</a></li>
+                <li><a ng-click="exchangeGift()">提现</a></li>
+                <li class="divider"></li>
+                <li><a ng-click="exchangeGift()">冲减</a></li>
+              </ul>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </form>

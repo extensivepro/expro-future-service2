@@ -62,6 +62,10 @@ app.config(function($stateProvider, $urlRouterProvider, USER_ROLES) {
       url: '/bills',
       templateUrl: 'partials/bills.html'
     })
+    .state('accounts', {
+      url: '/accounts',
+      templateUrl: 'partials/accounts.html'
+    })
 });
 
 /**
@@ -348,10 +352,12 @@ var MemberDetailModalInstanceCtrl = function ($scope, $modalInstance, $rootScope
   $scope.entity = entity
   
   $scope.status = {
-    isopen: false
+    isPointOpen: false,
+    isPrepayOpen: false
   }
   
   $scope.pointValue = 16
+  $scope.prepayValue = 10
   
   $scope.cancel = function () {
     $modalInstance.dismiss()
@@ -387,6 +393,14 @@ var MemberDetailModalInstanceCtrl = function ($scope, $modalInstance, $rootScope
   
   $scope.exchangeGift = function () {
     operatePoint(0-$scope.pointValue, "手动兑换积分")
+  }
+  
+  $scope.prepay = function () {
+    
+  }
+  
+  $scope.withdraw = function () {
+    
   }
   
 }
