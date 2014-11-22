@@ -73,10 +73,22 @@ app.config(function($stateProvider, $urlRouterProvider, USER_ROLES) {
  * Global Level variable and function
  */
 
-app.controller('ApplicationCtrl', function ($scope, $rootScope, $modal, User) {
+app.controller('ApplicationCtrl', function ($scope, $rootScope, $modal, User, Employe) {
   
+  var setCurrentUser = function (user) {
+    $rootScope.currentUser = user
+    if(user.employeID) {
+      Employe.findOne({filter:{where:{id:user.employeID}, include:['merchant', 'shop']}}, function (employe) {
+        console.log(employe, '---------', user.employeID)
+        $rootScope.currentEmploye = employe
+      }, function (res) {
+        console.log('Find employe error')
+      })
+    }
+  }
+
   $rootScope.$on('AUTH_LOGIN', function(e, user) {
-    $rootScope.currentUser = user.user
+    setCurrentUser(user.user)
   });
 
   $rootScope.$on('AUTH_LOGOUT', function (d, data) {
@@ -106,7 +118,7 @@ app.controller('ApplicationCtrl', function ($scope, $rootScope, $modal, User) {
   }
 
   User.getCurrent(function (user) {
-    $rootScope.currentUser = user
+    setCurrentUser(user)
   }, function () {
     $rootScope.$broadcast('AUTH_LOGOUT')
   })
@@ -347,10 +359,12 @@ var CreateMemberModalInstanceCtrl = function ($scope, $modalInstance, $rootScope
   })
 }
 
-var MemberDetailModalInstanceCtrl = function ($scope, $modalInstance, $rootScope, entity, Point) {
+var MemberDetailModalInstanceCtrl = function ($scope, $modalInstance, $rootScope, entity, Point, Bill) {
   
   $scope.entity = entity
   
+  $scope.alerts = []
+
   $scope.status = {
     isPointOpen: false,
     isPrepayOpen: false
@@ -396,6 +410,38 @@ var MemberDetailModalInstanceCtrl = function ($scope, $modalInstance, $rootScope
   }
   
   $scope.prepay = function () {
+    var amount = $scope.prepayValue*100
+    var now = Math.floor(Date.now()/1000)
+    Bill.create({
+      dealType: 'prepay',
+      amount: amount,
+      shopID: $scope.currentEmploye.shopID,
+      merchantID: $scope.currentEmploye.merchantID,
+      agentID: $scope.currentUser.employeID,
+      cashSettlement: {
+        status: 'closed',
+        serialNumber: 'abc123',
+        amount: amount,
+        settledAt: now,
+        payType: 'cash'
+      },
+      memberSettlement: {
+        status: 'closed',
+        serialNumber: 'abc123',
+        amount: amount,
+        settledAt: now,
+        payeeAccount: {
+          id: entity.account.id,
+          name: entity.account.name,
+          balance: entity.account.balance
+        },
+        payType: 'perpay'
+      }
+    }, function (bill) {
+      entity.account.balance += amount 
+    }, function (res) {
+      $scope.alerts.push({type: 'danger', msg: '储值操作失败'})
+    })
     
   }
   

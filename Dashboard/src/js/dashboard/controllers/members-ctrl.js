@@ -79,10 +79,12 @@ var CreateMemberModalInstanceCtrl = function ($scope, $modalInstance, $rootScope
   })
 }
 
-var MemberDetailModalInstanceCtrl = function ($scope, $modalInstance, $rootScope, entity, Point) {
+var MemberDetailModalInstanceCtrl = function ($scope, $modalInstance, $rootScope, entity, Point, Bill) {
   
   $scope.entity = entity
   
+  $scope.alerts = []
+
   $scope.status = {
     isPointOpen: false,
     isPrepayOpen: false
@@ -128,6 +130,38 @@ var MemberDetailModalInstanceCtrl = function ($scope, $modalInstance, $rootScope
   }
   
   $scope.prepay = function () {
+    var amount = $scope.prepayValue*100
+    var now = Math.floor(Date.now()/1000)
+    Bill.create({
+      dealType: 'prepay',
+      amount: amount,
+      shopID: $scope.currentEmploye.shopID,
+      merchantID: $scope.currentEmploye.merchantID,
+      agentID: $scope.currentUser.employeID,
+      cashSettlement: {
+        status: 'closed',
+        serialNumber: 'abc123',
+        amount: amount,
+        settledAt: now,
+        payType: 'cash'
+      },
+      memberSettlement: {
+        status: 'closed',
+        serialNumber: 'abc123',
+        amount: amount,
+        settledAt: now,
+        payeeAccount: {
+          id: entity.account.id,
+          name: entity.account.name,
+          balance: entity.account.balance
+        },
+        payType: 'perpay'
+      }
+    }, function (bill) {
+      entity.account.balance += amount 
+    }, function (res) {
+      $scope.alerts.push({type: 'danger', msg: '储值操作失败'})
+    })
     
   }
   

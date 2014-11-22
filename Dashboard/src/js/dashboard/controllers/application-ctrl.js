@@ -3,10 +3,22 @@
  * Global Level variable and function
  */
 
-app.controller('ApplicationCtrl', function ($scope, $rootScope, $modal, User) {
+app.controller('ApplicationCtrl', function ($scope, $rootScope, $modal, User, Employe) {
   
+  var setCurrentUser = function (user) {
+    $rootScope.currentUser = user
+    if(user.employeID) {
+      Employe.findOne({filter:{where:{id:user.employeID}, include:['merchant', 'shop']}}, function (employe) {
+        console.log(employe, '---------', user.employeID)
+        $rootScope.currentEmploye = employe
+      }, function (res) {
+        console.log('Find employe error')
+      })
+    }
+  }
+
   $rootScope.$on('AUTH_LOGIN', function(e, user) {
-    $rootScope.currentUser = user.user
+    setCurrentUser(user.user)
   });
 
   $rootScope.$on('AUTH_LOGOUT', function (d, data) {
@@ -36,7 +48,7 @@ app.controller('ApplicationCtrl', function ($scope, $rootScope, $modal, User) {
   }
 
   User.getCurrent(function (user) {
-    $rootScope.currentUser = user
+    setCurrentUser(user)
   }, function () {
     $rootScope.$broadcast('AUTH_LOGOUT')
   })
