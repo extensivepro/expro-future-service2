@@ -21,5 +21,5 @@ $ npm start
 - :heavy_check_mark: Accumulate point for member.
 - :heavy_check_mark: Exchange gift by points.
 - <del>Decrease point manual.</del>
-- Perpay amount into account.
-- Decrease amount of account manual.
+- :heavy_check_mark: Perpay amount into account.
+- :heavy_check_mark: Decrease amount of account manual.
