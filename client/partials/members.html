@@ -21,6 +21,8 @@
               <th>姓名</th>
               <th>编号</th>
               <th>电话</th>
+              <th>储值账号ID</th>
+              <th>储值余额</th>
               <th>累积积分</th>
               <th>累计积分</th>
               <th class="text-center">商户</th>
@@ -34,6 +36,8 @@
               <td>{{entity.name}}</td>
               <td>{{entity.code}}</td>
               <td>{{entity.phone}}</td>
+              <td>{{entity.account.id}}</td>
+              <td>{{entity.account.balance/100 | currency:"￥"}}</td>
               <td>{{entity.postPoint}}</td>
               <td>{{entity.postTotalPoint}}</td>
               <td class="text-center">{{entity.merchant.name}}</td>

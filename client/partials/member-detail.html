@@ -60,6 +60,12 @@
     </div>
     <hr />
     <div class="form-group">
+      <label class="col-sm-2 control-label">储值账号ID</label>
+      <div class="col-sm-10">
+        <p class="form-control-static">{{entity.account.id}}</p>
+      </div>
+    </div>
+    <div class="form-group">
       <label class="col-sm-2 control-label">储值余额</label>
       <div class="col-sm-5">
         <p class="form-control-static">{{entity.account.balance/100 | currency:"￥"}}</p>

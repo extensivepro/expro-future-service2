@@ -6,24 +6,23 @@ module.exports = function(Bill) {
     next()
   }
   
+  var settle = function (account, amount, next) {
+    Bill.app.models.Account.findById(account.id, function (err, account) {
+      if(err) return next(err)
+      account.balance += amount;
+      account.save()
+      Bill.app.models.Member.update({"account.id": account.id}, {account: account}, next)
+    })
+    
+  }
+  
   Bill.afterCreate = function (next) {
     
     if(this.memberSettlement) {
-      var Account = Bill.app.models.Account
       if(this.memberSettlement.payeeAccount) {
-        Account.findById({id:this.memberSettlement.payeeAccount.id}, function (err, account) {
-          if(err) return next(err)
-          account.balance += this.memberSettlement.amount;
-          account.save()
-          next()
-        })
+        settle(this.memberSettlement.payeeAccount, this.memberSettlement.amount, next)
       } else if(this.memberSettlement.payerAccount) {
-        Account.findById({id:this.memberSettlement.payerAccount.id}, function (err, account) {
-          if(err) return next(err)
-          account.balance -= this.memberSettlement.amount;
-          account.save()
-          next()
-        })
+        settle(this.memberSettlement.payerAccount, 0-this.memberSettlement.amount, next)
       } else {
         next()
       }

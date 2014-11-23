@@ -129,44 +129,52 @@ var MemberDetailModalInstanceCtrl = function ($scope, $modalInstance, $rootScope
     operatePoint(0-$scope.pointValue, "手动兑换积分")
   }
   
-  $scope.prepay = function () {
+  var operatePrepay = function (dealType ,accountType) {
     var amount = $scope.prepayValue*100
     var now = Math.floor(Date.now()/1000)
-    Bill.create({
-      dealType: 'prepay',
+    var opt = {
+      dealType: dealType,
       amount: amount,
       shopID: $scope.currentEmploye.shopID,
       merchantID: $scope.currentEmploye.merchantID,
       agentID: $scope.currentUser.employeID,
       cashSettlement: {
-        status: 'closed',
-        serialNumber: 'abc123',
+        "status": 'closed',
+        serialNumber: now,
         amount: amount,
         settledAt: now,
         payType: 'cash'
       },
       memberSettlement: {
-        status: 'closed',
-        serialNumber: 'abc123',
+        "status": 'closed',
+        serialNumber: now,
         amount: amount,
         settledAt: now,
-        payeeAccount: {
-          id: entity.account.id,
-          name: entity.account.name,
-          balance: entity.account.balance
-        },
         payType: 'perpay'
       }
-    }, function (bill) {
-      entity.account.balance += amount 
+    }
+    
+    opt.memberSettlement[accountType] = {
+      id: entity.account.id,
+      "name": entity.account.name,
+      balance: entity.account.balance
+    }
+    Bill.create(opt, function (bill) {
+      if(accountType === "payeeAccount") {
+        entity.account.balance += amount 
+      } else {
+        entity.account.balance -= amount 
+      }
     }, function (res) {
       $scope.alerts.push({type: 'danger', msg: '储值操作失败'})
     })
-    
+  }
+  $scope.prepay = function () {
+    operatePrepay('prepay', "payeeAccount")
   }
   
   $scope.withdraw = function () {
-    
+    operatePrepay("withdraw", "payerAccount")
   }
   
 }
