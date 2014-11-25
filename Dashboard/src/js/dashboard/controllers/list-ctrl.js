@@ -31,7 +31,7 @@ app.controller('ListCtrl', function ListCtrl($scope) {
     }
     console.log('Filter:', filter, $scope)
     $scope.resource.query({filter: filter}, function (results) {
-      $scope.enitities = results
+      $scope.entities = results
     }, function (error) {
       console.log('Query ', $scope.resource, error)
     })
