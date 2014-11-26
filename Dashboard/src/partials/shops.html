@@ -29,7 +29,7 @@
               <td>{{entity.telephone}}</td>
               <td>{{entity.merchant.name}}</td>
               <td>{{entity.status | uppercase}}</td>
-              <td>{{dateFormat(entity.createdAt)}}</td>
+              <td>{{entity.createdAt | dateFormat}}</td>
             </tr>
           </tbody>
         </table>

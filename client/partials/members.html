@@ -31,7 +31,7 @@
             </tr>
           </thead>
           <tbody>
-            <tr ng-repeat="entity in enitities" ng-click="showDetail(entity)" class="clcikable">
+            <tr ng-repeat="entity in entities" ng-click="showDetail(entity)" class="clcikable">
               <td>{{entity.id}}</td>
               <td>{{entity.name}}</td>
               <td>{{entity.code}}</td>
@@ -42,7 +42,7 @@
               <td>{{entity.postTotalPoint}}</td>
               <td class="text-center">{{entity.merchant.name}}</td>
               <td>{{entity.status | uppercase}}</td>
-              <td class="text-right">{{dateFormat(entity.createdAt)}}</td>
+              <td class="text-right">{{entity.createdAt | dateFormat}}</td>
             </tr>
           </tbody>
         </table>

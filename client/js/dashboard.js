@@ -79,7 +79,6 @@ app.controller('ApplicationCtrl', function ($scope, $rootScope, $modal, User, Em
     $rootScope.currentUser = user
     if(user.employeID) {
       Employe.findOne({filter:{where:{id:user.employeID}, include:['merchant', 'shop']}}, function (employe) {
-        console.log(employe, '---------', user.employeID)
         $rootScope.currentEmploye = employe
       }, function (res) {
         console.log('Find employe error')
@@ -192,7 +191,7 @@ app.controller('ListCtrl', function ListCtrl($scope) {
     }
     console.log('Filter:', filter, $scope)
     $scope.resource.query({filter: filter}, function (results) {
-      $scope.enitities = results
+      $scope.entities = results
     }, function (error) {
       console.log('Query ', $scope.resource, error)
     })
@@ -200,10 +199,6 @@ app.controller('ListCtrl', function ListCtrl($scope) {
   
   $scope.showDetail = function (entity) {
     console.log(entity)
-  }
-  
-  $scope.dateFormat = function (date) {
-    return moment.unix(date).format('YYYY-MM-DD hh:mm:ss')
   }
   
   $scope.init = function() {
@@ -651,4 +646,12 @@ app.directive('loginDialog', function (AUTH_EVENTS) {
     }
   };
 })
+app
+.filter("dateFormat", function () {
+  return function (date, format) {
+    format = format || 'YYYY-MM-DD HH:mm:ss'
+    return moment.unix(date).format(format)
+  }
+})
+
 })();

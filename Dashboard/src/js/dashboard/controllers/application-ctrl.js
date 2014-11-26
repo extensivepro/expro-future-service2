@@ -9,7 +9,6 @@ app.controller('ApplicationCtrl', function ($scope, $rootScope, $modal, User, Em
     $rootScope.currentUser = user
     if(user.employeID) {
       Employe.findOne({filter:{where:{id:user.employeID}, include:['merchant', 'shop']}}, function (employe) {
-        console.log(employe, '---------', user.employeID)
         $rootScope.currentEmploye = employe
       }, function (res) {
         console.log('Find employe error')

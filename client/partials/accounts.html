@@ -30,7 +30,7 @@
             </tr>
           </thead>
           <tbody>
-            <tr ng-repeat="entity in enitities">
+            <tr ng-repeat="entity in entities">
               <td>{{entity.id}}</td>
               <td>{{entity.billNumber}}</td>
               <td>{{entity.amount}}</td>
@@ -41,7 +41,7 @@
               <td class="text-center">{{entity.merchant.name}}</td>
               <td class="text-center">{{entity.shop.name}}</td>
               <td>{{entity.agent.name}}</td>
-              <td class="text-right">{{dateFormat(entity.createdAt)}}</td>
+              <td class="text-right">{{entity.createdAt | dateFormat}}</td>
             </tr>
           </tbody>
         </table>

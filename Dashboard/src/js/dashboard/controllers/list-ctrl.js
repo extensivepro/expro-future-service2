@@ -41,10 +41,6 @@ app.controller('ListCtrl', function ListCtrl($scope) {
     console.log(entity)
   }
   
-  $scope.dateFormat = function (date) {
-    return moment.unix(date).format('YYYY-MM-DD hh:mm:ss')
-  }
-  
   $scope.init = function() {
     $scope.fetch()
   }

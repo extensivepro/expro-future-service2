@@ -42,7 +42,7 @@
               <td class="text-center">{{entity.shop.merchant.name}}</td>
               <td class="text-center">{{entity.shop.name}}</td>
               <td>{{entity.status | uppercase}}</td>
-              <td class="text-right">{{dateFormat(entity.createdAt)}}</td>
+              <td class="text-right">{{entity.createdAt | dateFormat}}</td>
             </tr>
           </tbody>
         </table>
