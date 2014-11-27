@@ -135,6 +135,7 @@ var MemberDetailModalInstanceCtrl = function ($scope, $modalInstance, $rootScope
     var opt = {
       dealType: dealType,
       amount: amount,
+      billNumber: now,
       shopID: $scope.currentEmploye.shopID,
       merchantID: $scope.currentEmploye.merchantID,
       agentID: $scope.currentUser.employeID,
