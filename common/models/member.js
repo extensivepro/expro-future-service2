@@ -39,7 +39,7 @@ module.exports = function(Member) {
   
   Member.afterCreate = function (next) {
     var member = this
-    Member.app.models.Account.create({ownerID:member.id}, function (error, account) {
+    Member.app.models.Account.create({ownerID:member.id, "name": member.name}, function (error, account) {
       member.account = account
       member.save()
       next()
