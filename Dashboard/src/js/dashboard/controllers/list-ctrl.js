@@ -29,7 +29,7 @@ app.controller('ListCtrl', function ListCtrl($scope) {
     if ($scope.includes.length > 0) {
       filter.include = $scope.includes
     }
-    console.log('Filter:', filter, $scope)
+    // console.log('Filter:', filter, $scope)
     $scope.resource.query({filter: filter}, function (results) {
       $scope.entities = results
     }, function (error) {

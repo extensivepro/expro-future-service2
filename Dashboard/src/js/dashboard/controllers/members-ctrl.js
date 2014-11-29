@@ -6,7 +6,7 @@ app.controller('MembersCtrl', function MembersCtrl($scope, Member, $controller, 
   $scope.resource = Member
   $scope.search.orFields = ['name', 'phone']
   
-  $scope.create = function () {
+  $scope.showCreate = function () {
     var modalInstance = $modal.open({
       templateUrl: 'partials/member-add.html',
       controller: CreateMemberModalInstanceCtrl,
@@ -44,11 +44,9 @@ app.controller('MembersCtrl', function MembersCtrl($scope, Member, $controller, 
 var CreateMemberModalInstanceCtrl = function ($scope, $modalInstance, $rootScope, Member, Employe) {
 
   $scope.entity = {
-    merchantID: "e20dccdf039b3874"
+    merchantID: $scope.currentEmploye.merchant.id
   }
   
-  $scope.alerts = []
-	
   $scope.tryCreate = function () {
     $scope.alerts = []
     Member.create($scope.entity, function (member) {
@@ -64,19 +62,7 @@ var CreateMemberModalInstanceCtrl = function ($scope, $modalInstance, $rootScope
   
   $scope.blurCb = function (evt) {
     $scope.entity.code = $scope.entity.phone
-  }
-  
-  Employe.findOne({
-    filter: {
-      where: {id: $scope.currentUser.employeID},
-      include: 'merchant'
-    }
-  }, function (employe) {
-    $scope.merchant = employe.merchant
-    $scope.entity.merchantID = employe.merchant.id
-  }, function (res) {
-    $scope.alerts.push({type: 'warning', msg: '没有找到雇员对应的商户'})
-  })
+  }  
 }
 
 var MemberDetailModalInstanceCtrl = function ($scope, $modalInstance, $rootScope, entity, Point, Bill) {
