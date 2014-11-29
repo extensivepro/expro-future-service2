@@ -8,14 +8,19 @@ app.controller('ApplicationCtrl', function ($scope, $rootScope, $modal, User, Em
   var setCurrentUser = function (user) {
     $rootScope.currentUser = user
     if(user.employeID) {
-      Employe.findOne({filter:{where:{id:user.employeID}, include:['merchant', 'shop']}}, function (employe) {
+      Employe.findOne({
+        filter:{
+          where:{id:user.employeID}, 
+          include:['merchant', 'shop']
+        }
+      }, function (employe) {
         $rootScope.currentEmploye = employe
       }, function (res) {
         console.log('Find employe error')
       })
     }
   }
-
+  
   $rootScope.$on('AUTH_LOGIN', function(e, user) {
     setCurrentUser(user.user)
   });
@@ -32,12 +37,12 @@ app.controller('ApplicationCtrl', function ($scope, $rootScope, $modal, User, Em
       size: 'sm',
       backdrop: false,
       keybaord: false
-    });
+    })
 
     modalInstance.result.then(function (user) {
     }, function () {
-      console.info('Modal dismissed at: ' + new Date());
-    });
+      console.info('Modal dismissed at: ' + new Date())
+    })
   }
   
   $scope.logout = function () {
@@ -51,6 +56,34 @@ app.controller('ApplicationCtrl', function ($scope, $rootScope, $modal, User, Em
   }, function () {
     $rootScope.$broadcast('AUTH_LOGOUT')
   })
+  
+  $scope.showProfile = function () {
+    var modalInstance = $modal.open({
+      templateUrl: 'partials/profile.html',
+      controller: ProfileModalInstanceCtrl,
+      size: 'md',
+      backdrop: false,
+      keybaord: false
+    })
+
+    modalInstance.result.then(function (user) {
+    }, function () {
+      console.info('Modal dismissed at: ' + new Date())
+    })
+  }
+  
+  $scope.showResetPassword = function () {
+    var modalInstance = $modal.open({
+      templateUrl: 'partials/reset-password.html',
+      controller: ResetPasswordModalInstanceCtrl,
+      size: 'sm'
+    })
+
+    modalInstance.result.then(function (user) {
+    }, function () {
+      console.info('Modal dismissed at: ' + new Date())
+    })
+  }
   
 })
 
@@ -86,4 +119,29 @@ var LoginModalInstanceCtrl = function ($scope, $modalInstance, $rootScope, User)
       $scope.alerts.push({type: 'danger', msg: '注册用户失败'})      
     })
   } 
+}
+
+var ProfileModalInstanceCtrl = function ($scope, $modalInstance, $rootScope, User) {
+  
+}
+
+var ResetPasswordModalInstanceCtrl = function ($scope, $modalInstance, $rootScope, User) {
+  $scope.credentials = {}
+  
+  $scope.resetPassword = function (credentials) {
+    $scope.alerts = []
+
+    if (credentials.password !== credentials.password2) {
+      return $scope.alerts.push({type: 'danger', msg: '两次输入的密码不一致'})      
+    }
+    
+    User.upsert({
+      id: $scope.currentUser.id,
+      password: credentials.password
+    }, function (user) {
+      $modalInstance.close()
+    }, function (res) {
+      $scope.alerts.push({type: 'danger', msg: '更新用户密码失败'})      
+    })
+  }
 }
