@@ -1,8 +1,8 @@
-<div class="row" ng-controller="BillsCtrl" ng-init='init()'>
+<div class="row" ng-controller="DealsCtrl" ng-init='init()'>
   <div class="widget">
     <div class="widget-header">
       <div class="col-md-2">
-        <i class="fa fa-lg fa-th-list"></i> 账单
+        <i class="fa fa-lg fa-th-list"></i> 交易
       </div>
       <div class="col-md-10">
         <a ng-click="fetch()" class="pull-right btn"><i class="fa fa-refresh"></i> 刷新 </a>
@@ -17,12 +17,12 @@
           <thead>
             <tr>
               <th>ID</th>
-              <th>账单号</th>
+              <th>流水号</th>
               <th>金额</th>
-              <th>折扣</th>
-              <th>现金支付</th>
-              <th>储值支付</th>
-              <th>交易类型</th>
+              <th>数量</th>
+              <th>账单号</th>
+              <th>设备ID</th>
+              <th>顾客</th>
               <th class="text-center">商户</th>
               <th class="text-center">门店</th>
               <th>经手人</th>
@@ -32,15 +32,15 @@
           <tbody>
             <tr ng-repeat="entity in entities">
               <td>{{entity.id}}</td>
-              <td>{{entity.billNumber}}</td>
-              <td>{{entity.amount}}</td>
-              <td>{{entity.discountAmount}}</td>
-              <td>{{entity.cashSettlement.amount}}</td>
-              <td>{{entity.memberSettlement.amount}}</td>
-              <td>{{entity.dealType | uppercase}}</td>
+              <td>{{entity.serialNumber}}</td>
+              <td>{{entity.fee/100 | currency: '￥'}}</td>
+              <td>{{entity.quantity}}</td>
+              <td>{{entity.bill.billNumber}}</td>
+              <td>{{entity.deviceID}}</td>
+              <td>{{entity.bill.memberSettlement | billOwner}}</td>
               <td class="text-center">{{entity.merchant.name}}</td>
               <td class="text-center">{{entity.shop.name}}</td>
-              <td>{{entity.agent.name}}</td>
+              <td>{{entity.seller.name}}</td>
               <td class="text-right">{{entity.createdAt | dateFormat}}</td>
             </tr>
           </tbody>

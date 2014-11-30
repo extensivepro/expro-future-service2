@@ -1,9 +1,37 @@
 {
   "name": "deal",
   "base": "PersistedModel",
+  "options": {
+    "mongodb": {
+      "collection": "deals"
+    }
+  },
   "properties": {},
   "validations": [],
-  "relations": {},
-  "acls": [],
+  "relations": {
+    "merchant": {
+      "type": "belongsTo",
+      "model": "merchant",
+      "foreignKey": "merchantID"
+    },
+    "shop": {
+      "type": "belongsTo",
+      "model": "shop",
+      "foreignKey": "shopID"
+    },
+    "bill": {
+      "type": "belongsTo",
+      "model": "bill",
+      "foreignKey": "billID"
+    }
+  },
+  "acls": [
+    {
+      "accessType": "WRITE",
+      "principalType": "ROLE",
+      "principalId": "$unauthenticated",
+      "permission": "DENY"
+    }
+  ],
   "methods": []
 }

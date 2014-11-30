@@ -66,6 +66,10 @@ app.config(function($stateProvider, $urlRouterProvider, USER_ROLES) {
       url: '/accounts',
       templateUrl: 'partials/accounts.html'
     })
+    .state('deals', {
+      url: '/deals',
+      templateUrl: 'partials/deals.html'
+    })
 });
 
 /**
@@ -683,6 +687,24 @@ app.controller('BillsCtrl', function BillsCtrl($scope, Bill, $controller) {
   $scope.includes = ['merchant', 'shop', 'agent']
 })
 /**
+ * Accounts Controller
+ */
+app.controller('AccountsCtrl', function AccountsCtrl($scope, Account, $controller) {
+  $controller('ListCtrl', {$scope: $scope})
+  $scope.resource = Account
+  $scope.search.orFields = ['name']
+  // $scope.includes = ['merchant', 'shop', 'agent']
+})
+/**
+ * Deals Controller
+ */
+app.controller('DealsCtrl', function DealsCtrl($scope, Deal, $controller) {
+  $controller('ListCtrl', {$scope: $scope})
+  $scope.resource = Deal
+  $scope.search.orFields = ['merchant.name']
+  $scope.includes = ['merchant', 'shop', 'bill']
+})
+/**
  * Loading Directive
  * @see http://tobiasahlin.com/spinkit/
  */
@@ -735,6 +757,18 @@ app
   return function (date, format) {
     format = format || 'YYYY-MM-DD HH:mm:ss'
     return moment.unix(date).format(format)
+  }
+})
+
+.filter("billOwner", function () {
+  return function (settlement) {
+    var owner = '走入客户'
+    if(settlement && settlement.payeeAccount) {
+      owner = settlement.payeeAccount.name
+    } else if(settlement && settlement.payerAccount) {
+      owner = settlement.payerAccount.name
+    }
+    return owner
   }
 })
 
