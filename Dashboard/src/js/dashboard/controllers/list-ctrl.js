@@ -49,13 +49,13 @@ app.controller('ListCtrl', function ListCtrl($scope, $modal) {
       }
     }
     modalOption.size = modal.size || 'lg'
-    var modalInstance = $modal.open(modalOption);
+    var modalInstance = $modal.open(modalOption)
 
     modalInstance.result.then(function (entity) {
       $scope.fetch()
     }, function () {
-      console.info('Modal dismissed at: ' + new Date());
-    });
+      console.info('Modal dismissed at: ' + new Date())
+    })
   }
   
   $scope.showCreate = function () {

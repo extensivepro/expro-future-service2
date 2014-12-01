@@ -2,24 +2,7 @@
   <h3 class="modal-title text-center">新增交易</h3>
 </div>
 <div class="modal-body">
-  
-  <wizard on-finish="finishedWizard()"> 
-      <wz-step title="Starting">
-          <h1>This is the first step</h1>
-          <p>Here you can use whatever you want. You can use other directives, binding, etc.</p>
-          <input type="submit" wz-next value="Continue" />
-      </wz-step>
-      <wz-step title="Continuing">
-          <h1>Continuing</h1>
-          <p>You have continued here!</p>
-          <input type="submit" wz-next value="Go on" />
-      </wz-step>
-      <wz-step title="More steps">
-          <p>Even more steps!!</p>
-          <input type="submit" wz-next value="Finish now" />
-      </wz-step>
-  </wizard>
-  
+    
   <form class="form-horizontal">
     <div class="form-group">
       <label class="col-sm-2 control-label">商户</label>
@@ -48,6 +31,8 @@
         <p class="form-control-static">{{entity.serialNumber}}</p>
       </div>
     </div>
+    
+    <a ng-click="showItems()" class="btn"><i class="fa fa-plus"></i> 新增 </a>
     
     <div class="form-group">
       <div class="col-sm-12">
@@ -97,3 +82,31 @@
     <button class="btn btn-warning btn-lg" ng-click="cancel()">取消</button>
   </div>
 </div>
+
+<script id="deal-add-item-list.html" type="text/ng-template">
+  <div class="modal-header">
+    <h3 class="modal-title text-center">选择商品</h3>
+  </div>
+  <div class="modal-body">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>商品名</th>
+          <th>零售价</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr ng-repeat="entity in entities" ng-class="{'success': entity.isChecked}" ng-click="entity.isChecked = !entity.isChecked" class="clcikable">
+          <td>{{entity.name}}</td>
+          <td>{{entity.price}}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="modal-footer">
+    <div class="col-sm-12">
+      <button class="btn btn-primary btn-lg" ng-click="confirm()">确定</button>
+      <button class="btn btn-warning btn-lg" ng-click="cancel()">取消</button>
+    </div>
+  </div>
+</script>
