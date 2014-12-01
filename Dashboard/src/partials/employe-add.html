@@ -1,28 +1,38 @@
 <div class="modal-header">
-  <h3 class="modal-title text-center">新增会员</h3>
+  <h3 class="modal-title text-center">新增雇员</h3>
 </div>
 <div class="modal-body">
   <form class="form-horizontal">
     <div class="form-group">
       <label class="col-sm-2 control-label">商户</label>
       <div class="col-sm-10">
-        <p class="form-control-static">{{currentEmploye.merchant.name}}</p>
+        <p class="form-control-static">{{currentEmploye.merchant.name}} - {{currentEmploye.shop.name}}</p>
       </div>
     </div>
+    
     <div class="form-group">
       <div class="col-sm-12">
-        <input type="text" class="form-control" placeholder="请输入联系电话" ng-model="entity.phone" ui-event="{ blur : 'blurCb($event)' }">
+        <input type="text" class="form-control" placeholder="请输入名字" ng-model="entity.name">
       </div>
     </div>
+    
     <div class="form-group">
       <div class="col-sm-12">
-        <input type="text" class="form-control" placeholder="请输入会员编号" ng-model="entity.code">
+        <input type="text" class="form-control" placeholder="请输入工号" ng-model="entity.jobNumber">
       </div>
     </div>
+    
     <div class="form-group">
       <div class="col-sm-12">
-        <input type="text" class="form-control" placeholder="请输入会员名称" ng-model="entity.name">
+        <input type="text" class="form-control" placeholder="请输入联系电话" ng-model="entity.phone">
       </div>
+    </div>
+    
+    <div class="form-group">
+      <div class="col-sm-12">
+        <input type="text" class="form-control" placeholder="请输入身份证号" ng-model="entity.idcard">
+      </div>
+
     </div>
   </form>
 </div>
@@ -31,7 +41,7 @@
     <alert data-ng-repeat="alert in alerts" type="{{alert.type}}">{{alert.msg}}</alert>
   </div>
   <div class="col-sm-12">
-    <button class="btn btn-primary btn-lg" ng-click="tryCreate()">新增会员</button>
+    <button class="btn btn-primary btn-lg" ng-click="tryCreate()">新增雇员</button>
     <button class="btn btn-warning btn-lg" ng-click="cancel()">取消</button>
   </div>
 </div>

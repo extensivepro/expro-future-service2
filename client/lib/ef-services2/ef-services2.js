@@ -2,7 +2,7 @@
 (function(window, angular, undefined) {'use strict';
 
 var urlBase = "http://fankahui.com:3000/api";
-// urlBase = "http://0.0.0.0:3000/api";
+urlBase = "http://0.0.0.0:3000/api";
 var authHeader = 'authorization';
 
 /**
@@ -82,6 +82,8 @@ module.factory(
          *
          */
         "login": {
+          url: urlBase + "/users/login",
+          method: "POST",
           params: {
             include: "user"
           },
@@ -93,9 +95,7 @@ module.factory(
               LoopBackAuth.save();
               return response.resource;
             }
-          },
-          url: urlBase + "/users/login",
-          method: "POST"
+          }
         },
 
         /**
@@ -129,15 +129,15 @@ module.factory(
          * This method returns no data.
          */
         "logout": {
+          url: urlBase + "/users/logout",
+          method: "POST",
           interceptor: {
             response: function(response) {
               LoopBackAuth.clearUser();
-              LoopBackAuth.clearStorage();
+              LoopBackAuth.save();
               return response.resource;
             }
-          },
-          url: urlBase + "/users/logout",
-          method: "POST"
+          }
         },
 
         /**
@@ -171,7 +171,7 @@ module.factory(
          */
         "confirm": {
           url: urlBase + "/users/confirm",
-          method: "GET"
+          method: "GET",
         },
 
         /**
@@ -206,7 +206,7 @@ module.factory(
          */
         "resetPassword": {
           url: urlBase + "/users/reset",
-          method: "POST"
+          method: "POST",
         },
 
         /**
@@ -241,7 +241,7 @@ module.factory(
          */
         "prototype$__findById__accessTokens": {
           url: urlBase + "/users/:id/accessTokens/:fk",
-          method: "GET"
+          method: "GET",
         },
 
         /**
@@ -269,11 +269,13 @@ module.factory(
          *   populated with the actual data once the response is returned
          *   from the server.
          *
-         * This method returns no data.
+         * Data properties:
+         *
+         *  - `` – `{undefined=}` - 
          */
         "prototype$__destroyById__accessTokens": {
           url: urlBase + "/users/:id/accessTokens/:fk",
-          method: "DELETE"
+          method: "DELETE",
         },
 
         /**
@@ -312,13 +314,13 @@ module.factory(
          */
         "prototype$__updateById__accessTokens": {
           url: urlBase + "/users/:id/accessTokens/:fk",
-          method: "PUT"
+          method: "PUT",
         },
 
         // INTERNAL. Use User.employe() instead.
         "prototype$__get__employe": {
           url: urlBase + "/users/:id/employe",
-          method: "GET"
+          method: "GET",
         },
 
         /**
@@ -352,9 +354,9 @@ module.factory(
          * </em>
          */
         "prototype$__get__accessTokens": {
-          isArray: true,
           url: urlBase + "/users/:id/accessTokens",
-          method: "GET"
+          method: "GET",
+          isArray: true,
         },
 
         /**
@@ -391,7 +393,7 @@ module.factory(
          */
         "prototype$__create__accessTokens": {
           url: urlBase + "/users/:id/accessTokens",
-          method: "POST"
+          method: "POST",
         },
 
         /**
@@ -421,7 +423,7 @@ module.factory(
          */
         "prototype$__delete__accessTokens": {
           url: urlBase + "/users/:id/accessTokens",
-          method: "DELETE"
+          method: "DELETE",
         },
 
         /**
@@ -455,7 +457,7 @@ module.factory(
          */
         "prototype$__count__accessTokens": {
           url: urlBase + "/users/:id/accessTokens/count",
-          method: "GET"
+          method: "GET",
         },
 
         /**
@@ -493,7 +495,7 @@ module.factory(
          */
         "create": {
           url: urlBase + "/users",
-          method: "POST"
+          method: "POST",
         },
 
         /**
@@ -531,7 +533,7 @@ module.factory(
          */
         "upsert": {
           url: urlBase + "/users",
-          method: "PUT"
+          method: "PUT",
         },
 
         /**
@@ -563,7 +565,7 @@ module.factory(
          */
         "exists": {
           url: urlBase + "/users/:id/exists",
-          method: "GET"
+          method: "GET",
         },
 
         /**
@@ -596,7 +598,7 @@ module.factory(
          */
         "findById": {
           url: urlBase + "/users/:id",
-          method: "GET"
+          method: "GET",
         },
 
         /**
@@ -628,9 +630,9 @@ module.factory(
          * </em>
          */
         "find": {
-          isArray: true,
           url: urlBase + "/users",
-          method: "GET"
+          method: "GET",
+          isArray: true,
         },
 
         /**
@@ -663,7 +665,7 @@ module.factory(
          */
         "findOne": {
           url: urlBase + "/users/findOne",
-          method: "GET"
+          method: "GET",
         },
 
         /**
@@ -697,7 +699,7 @@ module.factory(
          */
         "updateAll": {
           url: urlBase + "/users/update",
-          method: "POST"
+          method: "POST",
         },
 
         /**
@@ -727,7 +729,7 @@ module.factory(
          */
         "deleteById": {
           url: urlBase + "/users/:id",
-          method: "DELETE"
+          method: "DELETE",
         },
 
         /**
@@ -759,7 +761,7 @@ module.factory(
          */
         "count": {
           url: urlBase + "/users/count",
-          method: "GET"
+          method: "GET",
         },
 
         /**
@@ -796,7 +798,7 @@ module.factory(
          */
         "prototype$updateAttributes": {
           url: urlBase + "/users/:id",
-          method: "PUT"
+          method: "PUT",
         },
 
         /**
@@ -820,7 +822,7 @@ module.factory(
          *   from the server.
          */
         "getCurrent": {
-           url: urlBase + "/users" + "/:id",
+           url: urlBase + "/" + "/users" + "/:id",
            method: "GET",
            params: {
              id: function() {
@@ -1114,7 +1116,7 @@ module.factory(
          */
         "create": {
           url: urlBase + "/members",
-          method: "POST"
+          method: "POST",
         },
 
         /**
@@ -1152,7 +1154,7 @@ module.factory(
          */
         "upsert": {
           url: urlBase + "/members",
-          method: "PUT"
+          method: "PUT",
         },
 
         /**
@@ -1184,7 +1186,7 @@ module.factory(
          */
         "exists": {
           url: urlBase + "/members/:id/exists",
-          method: "GET"
+          method: "GET",
         },
 
         /**
@@ -1217,7 +1219,7 @@ module.factory(
          */
         "findById": {
           url: urlBase + "/members/:id",
-          method: "GET"
+          method: "GET",
         },
 
         /**
@@ -1249,9 +1251,9 @@ module.factory(
          * </em>
          */
         "find": {
-          isArray: true,
           url: urlBase + "/members",
-          method: "GET"
+          method: "GET",
+          isArray: true,
         },
 
         /**
@@ -1284,7 +1286,7 @@ module.factory(
          */
         "findOne": {
           url: urlBase + "/members/findOne",
-          method: "GET"
+          method: "GET",
         },
 
         /**
@@ -1318,7 +1320,7 @@ module.factory(
          */
         "updateAll": {
           url: urlBase + "/members/update",
-          method: "POST"
+          method: "POST",
         },
 
         /**
@@ -1348,7 +1350,7 @@ module.factory(
          */
         "deleteById": {
           url: urlBase + "/members/:id",
-          method: "DELETE"
+          method: "DELETE",
         },
 
         /**
@@ -1380,7 +1382,7 @@ module.factory(
          */
         "count": {
           url: urlBase + "/members/count",
-          method: "GET"
+          method: "GET",
         },
 
         /**
@@ -1417,7 +1419,7 @@ module.factory(
          */
         "prototype$updateAttributes": {
           url: urlBase + "/members/:id",
-          method: "PUT"
+          method: "PUT",
         },
       }
     );
@@ -1619,7 +1621,7 @@ module.factory(
          */
         "create": {
           url: urlBase + "/merchants",
-          method: "POST"
+          method: "POST",
         },
 
         /**
@@ -1657,7 +1659,7 @@ module.factory(
          */
         "upsert": {
           url: urlBase + "/merchants",
-          method: "PUT"
+          method: "PUT",
         },
 
         /**
@@ -1689,7 +1691,7 @@ module.factory(
          */
         "exists": {
           url: urlBase + "/merchants/:id/exists",
-          method: "GET"
+          method: "GET",
         },
 
         /**
@@ -1722,7 +1724,7 @@ module.factory(
          */
         "findById": {
           url: urlBase + "/merchants/:id",
-          method: "GET"
+          method: "GET",
         },
 
         /**
@@ -1754,9 +1756,9 @@ module.factory(
          * </em>
          */
         "find": {
-          isArray: true,
           url: urlBase + "/merchants",
-          method: "GET"
+          method: "GET",
+          isArray: true,
         },
 
         /**
@@ -1789,7 +1791,7 @@ module.factory(
          */
         "findOne": {
           url: urlBase + "/merchants/findOne",
-          method: "GET"
+          method: "GET",
         },
 
         /**
@@ -1823,7 +1825,7 @@ module.factory(
          */
         "updateAll": {
           url: urlBase + "/merchants/update",
-          method: "POST"
+          method: "POST",
         },
 
         /**
@@ -1853,7 +1855,7 @@ module.factory(
          */
         "deleteById": {
           url: urlBase + "/merchants/:id",
-          method: "DELETE"
+          method: "DELETE",
         },
 
         /**
@@ -1885,7 +1887,7 @@ module.factory(
          */
         "count": {
           url: urlBase + "/merchants/count",
-          method: "GET"
+          method: "GET",
         },
 
         /**
@@ -1922,37 +1924,31 @@ module.factory(
          */
         "prototype$updateAttributes": {
           url: urlBase + "/merchants/:id",
-          method: "PUT"
+          method: "PUT",
         },
 
         // INTERNAL. Use Shop.merchant() instead.
         "::get::shop::merchant": {
           url: urlBase + "/shops/:id/merchant",
-          method: "GET"
+          method: "GET",
         },
 
         // INTERNAL. Use Employe.merchant() instead.
         "::get::employe::merchant": {
           url: urlBase + "/employes/:id/merchant",
-          method: "GET"
+          method: "GET",
         },
 
         // INTERNAL. Use Item.merchant() instead.
         "::get::item::merchant": {
           url: urlBase + "/items/:id/merchant",
-          method: "GET"
-        },
-
-        // INTERNAL. Use Deal.merchant() instead.
-        "::get::deal::merchant": {
-          url: urlBase + "/deals/:id/merchant",
-          method: "GET"
+          method: "GET",
         },
 
         // INTERNAL. Use Bill.merchant() instead.
         "::get::bill::merchant": {
           url: urlBase + "/bills/:id/merchant",
-          method: "GET"
+          method: "GET",
         },
       }
     );
@@ -2154,7 +2150,7 @@ module.factory(
          */
         "create": {
           url: urlBase + "/devices",
-          method: "POST"
+          method: "POST",
         },
 
         /**
@@ -2192,7 +2188,7 @@ module.factory(
          */
         "upsert": {
           url: urlBase + "/devices",
-          method: "PUT"
+          method: "PUT",
         },
 
         /**
@@ -2224,7 +2220,7 @@ module.factory(
          */
         "exists": {
           url: urlBase + "/devices/:id/exists",
-          method: "GET"
+          method: "GET",
         },
 
         /**
@@ -2257,7 +2253,7 @@ module.factory(
          */
         "findById": {
           url: urlBase + "/devices/:id",
-          method: "GET"
+          method: "GET",
         },
 
         /**
@@ -2289,9 +2285,9 @@ module.factory(
          * </em>
          */
         "find": {
-          isArray: true,
           url: urlBase + "/devices",
-          method: "GET"
+          method: "GET",
+          isArray: true,
         },
 
         /**
@@ -2324,7 +2320,7 @@ module.factory(
          */
         "findOne": {
           url: urlBase + "/devices/findOne",
-          method: "GET"
+          method: "GET",
         },
 
         /**
@@ -2358,7 +2354,7 @@ module.factory(
          */
         "updateAll": {
           url: urlBase + "/devices/update",
-          method: "POST"
+          method: "POST",
         },
 
         /**
@@ -2388,7 +2384,7 @@ module.factory(
          */
         "deleteById": {
           url: urlBase + "/devices/:id",
-          method: "DELETE"
+          method: "DELETE",
         },
 
         /**
@@ -2420,7 +2416,7 @@ module.factory(
          */
         "count": {
           url: urlBase + "/devices/count",
-          method: "GET"
+          method: "GET",
         },
 
         /**
@@ -2457,50 +2453,50 @@ module.factory(
          */
         "prototype$updateAttributes": {
           url: urlBase + "/devices/:id",
-          method: "PUT"
+          method: "PUT",
         },
 
         // INTERNAL. Use Shop.devices.findById() instead.
         "::findById::shop::devices": {
           url: urlBase + "/shops/:id/devices/:fk",
-          method: "GET"
+          method: "GET",
         },
 
         // INTERNAL. Use Shop.devices.destroyById() instead.
         "::destroyById::shop::devices": {
           url: urlBase + "/shops/:id/devices/:fk",
-          method: "DELETE"
+          method: "DELETE",
         },
 
         // INTERNAL. Use Shop.devices.updateById() instead.
         "::updateById::shop::devices": {
           url: urlBase + "/shops/:id/devices/:fk",
-          method: "PUT"
+          method: "PUT",
         },
 
         // INTERNAL. Use Shop.devices() instead.
         "::get::shop::devices": {
-          isArray: true,
           url: urlBase + "/shops/:id/devices",
-          method: "GET"
+          method: "GET",
+          isArray: true,
         },
 
         // INTERNAL. Use Shop.devices.create() instead.
         "::create::shop::devices": {
           url: urlBase + "/shops/:id/devices",
-          method: "POST"
+          method: "POST",
         },
 
         // INTERNAL. Use Shop.devices.destroyAll() instead.
         "::delete::shop::devices": {
           url: urlBase + "/shops/:id/devices",
-          method: "DELETE"
+          method: "DELETE",
         },
 
         // INTERNAL. Use Shop.devices.count() instead.
         "::count::shop::devices": {
           url: urlBase + "/shops/:id/devices/count",
-          method: "GET"
+          method: "GET",
         },
       }
     );
@@ -2670,50 +2666,50 @@ module.factory(
         // INTERNAL. Use Shop.merchant() instead.
         "prototype$__get__merchant": {
           url: urlBase + "/shops/:id/merchant",
-          method: "GET"
+          method: "GET",
         },
 
         // INTERNAL. Use Shop.devices.findById() instead.
         "prototype$__findById__devices": {
           url: urlBase + "/shops/:id/devices/:fk",
-          method: "GET"
+          method: "GET",
         },
 
         // INTERNAL. Use Shop.devices.destroyById() instead.
         "prototype$__destroyById__devices": {
           url: urlBase + "/shops/:id/devices/:fk",
-          method: "DELETE"
+          method: "DELETE",
         },
 
         // INTERNAL. Use Shop.devices.updateById() instead.
         "prototype$__updateById__devices": {
           url: urlBase + "/shops/:id/devices/:fk",
-          method: "PUT"
+          method: "PUT",
         },
 
         // INTERNAL. Use Shop.devices() instead.
         "prototype$__get__devices": {
-          isArray: true,
           url: urlBase + "/shops/:id/devices",
-          method: "GET"
+          method: "GET",
+          isArray: true,
         },
 
         // INTERNAL. Use Shop.devices.create() instead.
         "prototype$__create__devices": {
           url: urlBase + "/shops/:id/devices",
-          method: "POST"
+          method: "POST",
         },
 
         // INTERNAL. Use Shop.devices.destroyAll() instead.
         "prototype$__delete__devices": {
           url: urlBase + "/shops/:id/devices",
-          method: "DELETE"
+          method: "DELETE",
         },
 
         // INTERNAL. Use Shop.devices.count() instead.
         "prototype$__count__devices": {
           url: urlBase + "/shops/:id/devices/count",
-          method: "GET"
+          method: "GET",
         },
 
         /**
@@ -2751,7 +2747,7 @@ module.factory(
          */
         "create": {
           url: urlBase + "/shops",
-          method: "POST"
+          method: "POST",
         },
 
         /**
@@ -2789,7 +2785,7 @@ module.factory(
          */
         "upsert": {
           url: urlBase + "/shops",
-          method: "PUT"
+          method: "PUT",
         },
 
         /**
@@ -2821,7 +2817,7 @@ module.factory(
          */
         "exists": {
           url: urlBase + "/shops/:id/exists",
-          method: "GET"
+          method: "GET",
         },
 
         /**
@@ -2854,7 +2850,7 @@ module.factory(
          */
         "findById": {
           url: urlBase + "/shops/:id",
-          method: "GET"
+          method: "GET",
         },
 
         /**
@@ -2886,9 +2882,9 @@ module.factory(
          * </em>
          */
         "find": {
-          isArray: true,
           url: urlBase + "/shops",
-          method: "GET"
+          method: "GET",
+          isArray: true,
         },
 
         /**
@@ -2921,7 +2917,7 @@ module.factory(
          */
         "findOne": {
           url: urlBase + "/shops/findOne",
-          method: "GET"
+          method: "GET",
         },
 
         /**
@@ -2955,7 +2951,7 @@ module.factory(
          */
         "updateAll": {
           url: urlBase + "/shops/update",
-          method: "POST"
+          method: "POST",
         },
 
         /**
@@ -2985,7 +2981,7 @@ module.factory(
          */
         "deleteById": {
           url: urlBase + "/shops/:id",
-          method: "DELETE"
+          method: "DELETE",
         },
 
         /**
@@ -3017,7 +3013,7 @@ module.factory(
          */
         "count": {
           url: urlBase + "/shops/count",
-          method: "GET"
+          method: "GET",
         },
 
         /**
@@ -3054,25 +3050,19 @@ module.factory(
          */
         "prototype$updateAttributes": {
           url: urlBase + "/shops/:id",
-          method: "PUT"
+          method: "PUT",
         },
 
         // INTERNAL. Use Employe.shop() instead.
         "::get::employe::shop": {
           url: urlBase + "/employes/:id/shop",
-          method: "GET"
-        },
-
-        // INTERNAL. Use Deal.shop() instead.
-        "::get::deal::shop": {
-          url: urlBase + "/deals/:id/shop",
-          method: "GET"
+          method: "GET",
         },
 
         // INTERNAL. Use Bill.shop() instead.
         "::get::bill::shop": {
           url: urlBase + "/bills/:id/shop",
-          method: "GET"
+          method: "GET",
         },
       }
     );
@@ -3426,7 +3416,9 @@ module.factory(
          *   populated with the actual data once the response is returned
          *   from the server.
          *
-         * This method returns no data.
+         * Data properties:
+         *
+         *  - `` – `{undefined=}` - 
          */
         R.devices.destroyById = function() {
           var TargetResource = $injector.get("Device");
@@ -3541,13 +3533,13 @@ module.factory(
         // INTERNAL. Use Employe.shop() instead.
         "prototype$__get__shop": {
           url: urlBase + "/employes/:id/shop",
-          method: "GET"
+          method: "GET",
         },
 
         // INTERNAL. Use Employe.merchant() instead.
         "prototype$__get__merchant": {
           url: urlBase + "/employes/:id/merchant",
-          method: "GET"
+          method: "GET",
         },
 
         /**
@@ -3585,7 +3577,7 @@ module.factory(
          */
         "create": {
           url: urlBase + "/employes",
-          method: "POST"
+          method: "POST",
         },
 
         /**
@@ -3623,7 +3615,7 @@ module.factory(
          */
         "upsert": {
           url: urlBase + "/employes",
-          method: "PUT"
+          method: "PUT",
         },
 
         /**
@@ -3655,7 +3647,7 @@ module.factory(
          */
         "exists": {
           url: urlBase + "/employes/:id/exists",
-          method: "GET"
+          method: "GET",
         },
 
         /**
@@ -3688,7 +3680,7 @@ module.factory(
          */
         "findById": {
           url: urlBase + "/employes/:id",
-          method: "GET"
+          method: "GET",
         },
 
         /**
@@ -3720,9 +3712,9 @@ module.factory(
          * </em>
          */
         "find": {
-          isArray: true,
           url: urlBase + "/employes",
-          method: "GET"
+          method: "GET",
+          isArray: true,
         },
 
         /**
@@ -3755,7 +3747,7 @@ module.factory(
          */
         "findOne": {
           url: urlBase + "/employes/findOne",
-          method: "GET"
+          method: "GET",
         },
 
         /**
@@ -3789,7 +3781,7 @@ module.factory(
          */
         "updateAll": {
           url: urlBase + "/employes/update",
-          method: "POST"
+          method: "POST",
         },
 
         /**
@@ -3819,7 +3811,7 @@ module.factory(
          */
         "deleteById": {
           url: urlBase + "/employes/:id",
-          method: "DELETE"
+          method: "DELETE",
         },
 
         /**
@@ -3851,7 +3843,7 @@ module.factory(
          */
         "count": {
           url: urlBase + "/employes/count",
-          method: "GET"
+          method: "GET",
         },
 
         /**
@@ -3888,25 +3880,25 @@ module.factory(
          */
         "prototype$updateAttributes": {
           url: urlBase + "/employes/:id",
-          method: "PUT"
+          method: "PUT",
         },
 
         // INTERNAL. Use User.employe() instead.
         "::get::user::employe": {
           url: urlBase + "/users/:id/employe",
-          method: "GET"
+          method: "GET",
         },
 
         // INTERNAL. Use Point.agent() instead.
         "::get::point::agent": {
           url: urlBase + "/points/:id/agent",
-          method: "GET"
+          method: "GET",
         },
 
         // INTERNAL. Use Bill.agent() instead.
         "::get::bill::agent": {
           url: urlBase + "/bills/:id/agent",
-          method: "GET"
+          method: "GET",
         },
       }
     );
@@ -4148,7 +4140,7 @@ module.factory(
         // INTERNAL. Use Point.agent() instead.
         "prototype$__get__agent": {
           url: urlBase + "/points/:id/agent",
-          method: "GET"
+          method: "GET",
         },
 
         /**
@@ -4186,7 +4178,7 @@ module.factory(
          */
         "create": {
           url: urlBase + "/points",
-          method: "POST"
+          method: "POST",
         },
 
         /**
@@ -4224,7 +4216,7 @@ module.factory(
          */
         "upsert": {
           url: urlBase + "/points",
-          method: "PUT"
+          method: "PUT",
         },
 
         /**
@@ -4256,7 +4248,7 @@ module.factory(
          */
         "exists": {
           url: urlBase + "/points/:id/exists",
-          method: "GET"
+          method: "GET",
         },
 
         /**
@@ -4289,7 +4281,7 @@ module.factory(
          */
         "findById": {
           url: urlBase + "/points/:id",
-          method: "GET"
+          method: "GET",
         },
 
         /**
@@ -4321,9 +4313,9 @@ module.factory(
          * </em>
          */
         "find": {
-          isArray: true,
           url: urlBase + "/points",
-          method: "GET"
+          method: "GET",
+          isArray: true,
         },
 
         /**
@@ -4356,7 +4348,7 @@ module.factory(
          */
         "findOne": {
           url: urlBase + "/points/findOne",
-          method: "GET"
+          method: "GET",
         },
 
         /**
@@ -4390,7 +4382,7 @@ module.factory(
          */
         "updateAll": {
           url: urlBase + "/points/update",
-          method: "POST"
+          method: "POST",
         },
 
         /**
@@ -4420,7 +4412,7 @@ module.factory(
          */
         "deleteById": {
           url: urlBase + "/points/:id",
-          method: "DELETE"
+          method: "DELETE",
         },
 
         /**
@@ -4452,7 +4444,7 @@ module.factory(
          */
         "count": {
           url: urlBase + "/points/count",
-          method: "GET"
+          method: "GET",
         },
 
         /**
@@ -4489,7 +4481,7 @@ module.factory(
          */
         "prototype$updateAttributes": {
           url: urlBase + "/points/:id",
-          method: "PUT"
+          method: "PUT",
         },
       }
     );
@@ -4695,7 +4687,7 @@ module.factory(
         // INTERNAL. Use Item.merchant() instead.
         "prototype$__get__merchant": {
           url: urlBase + "/items/:id/merchant",
-          method: "GET"
+          method: "GET",
         },
 
         /**
@@ -4733,7 +4725,7 @@ module.factory(
          */
         "create": {
           url: urlBase + "/items",
-          method: "POST"
+          method: "POST",
         },
 
         /**
@@ -4771,7 +4763,7 @@ module.factory(
          */
         "upsert": {
           url: urlBase + "/items",
-          method: "PUT"
+          method: "PUT",
         },
 
         /**
@@ -4803,7 +4795,7 @@ module.factory(
          */
         "exists": {
           url: urlBase + "/items/:id/exists",
-          method: "GET"
+          method: "GET",
         },
 
         /**
@@ -4836,7 +4828,7 @@ module.factory(
          */
         "findById": {
           url: urlBase + "/items/:id",
-          method: "GET"
+          method: "GET",
         },
 
         /**
@@ -4868,9 +4860,9 @@ module.factory(
          * </em>
          */
         "find": {
-          isArray: true,
           url: urlBase + "/items",
-          method: "GET"
+          method: "GET",
+          isArray: true,
         },
 
         /**
@@ -4903,7 +4895,7 @@ module.factory(
          */
         "findOne": {
           url: urlBase + "/items/findOne",
-          method: "GET"
+          method: "GET",
         },
 
         /**
@@ -4937,7 +4929,7 @@ module.factory(
          */
         "updateAll": {
           url: urlBase + "/items/update",
-          method: "POST"
+          method: "POST",
         },
 
         /**
@@ -4967,7 +4959,7 @@ module.factory(
          */
         "deleteById": {
           url: urlBase + "/items/:id",
-          method: "DELETE"
+          method: "DELETE",
         },
 
         /**
@@ -4999,7 +4991,7 @@ module.factory(
          */
         "count": {
           url: urlBase + "/items/count",
-          method: "GET"
+          method: "GET",
         },
 
         /**
@@ -5036,7 +5028,7 @@ module.factory(
          */
         "prototype$updateAttributes": {
           url: urlBase + "/items/:id",
-          method: "PUT"
+          method: "PUT",
         },
       }
     );
@@ -5239,24 +5231,6 @@ module.factory(
       { 'id': '@id' },
       {
 
-        // INTERNAL. Use Deal.merchant() instead.
-        "prototype$__get__merchant": {
-          url: urlBase + "/deals/:id/merchant",
-          method: "GET"
-        },
-
-        // INTERNAL. Use Deal.shop() instead.
-        "prototype$__get__shop": {
-          url: urlBase + "/deals/:id/shop",
-          method: "GET"
-        },
-
-        // INTERNAL. Use Deal.bill() instead.
-        "prototype$__get__bill": {
-          url: urlBase + "/deals/:id/bill",
-          method: "GET"
-        },
-
         /**
          * @ngdoc method
          * @name lbServices.Deal#create
@@ -5292,7 +5266,7 @@ module.factory(
          */
         "create": {
           url: urlBase + "/deals",
-          method: "POST"
+          method: "POST",
         },
 
         /**
@@ -5330,7 +5304,7 @@ module.factory(
          */
         "upsert": {
           url: urlBase + "/deals",
-          method: "PUT"
+          method: "PUT",
         },
 
         /**
@@ -5362,7 +5336,7 @@ module.factory(
          */
         "exists": {
           url: urlBase + "/deals/:id/exists",
-          method: "GET"
+          method: "GET",
         },
 
         /**
@@ -5395,7 +5369,7 @@ module.factory(
          */
         "findById": {
           url: urlBase + "/deals/:id",
-          method: "GET"
+          method: "GET",
         },
 
         /**
@@ -5427,9 +5401,9 @@ module.factory(
          * </em>
          */
         "find": {
-          isArray: true,
           url: urlBase + "/deals",
-          method: "GET"
+          method: "GET",
+          isArray: true,
         },
 
         /**
@@ -5462,7 +5436,7 @@ module.factory(
          */
         "findOne": {
           url: urlBase + "/deals/findOne",
-          method: "GET"
+          method: "GET",
         },
 
         /**
@@ -5496,7 +5470,7 @@ module.factory(
          */
         "updateAll": {
           url: urlBase + "/deals/update",
-          method: "POST"
+          method: "POST",
         },
 
         /**
@@ -5526,7 +5500,7 @@ module.factory(
          */
         "deleteById": {
           url: urlBase + "/deals/:id",
-          method: "DELETE"
+          method: "DELETE",
         },
 
         /**
@@ -5558,7 +5532,7 @@ module.factory(
          */
         "count": {
           url: urlBase + "/deals/count",
-          method: "GET"
+          method: "GET",
         },
 
         /**
@@ -5595,7 +5569,7 @@ module.factory(
          */
         "prototype$updateAttributes": {
           url: urlBase + "/deals/:id",
-          method: "PUT"
+          method: "PUT",
         },
       }
     );
@@ -5734,114 +5708,6 @@ module.factory(
     R.modelName = "Deal";
 
 
-        /**
-         * @ngdoc method
-         * @name lbServices.Deal#merchant
-         * @methodOf lbServices.Deal
-         *
-         * @description
-         *
-         * Fetches belongsTo relation merchant
-         *
-         * @param {Object=} parameters Request parameters.
-         *
-         *  - `id` – `{*}` - PersistedModel id
-         *
-         *  - `refresh` – `{boolean=}` - 
-         *
-         * @param {function(Object,Object)=} successCb
-         *   Success callback with two arguments: `value`, `responseHeaders`.
-         *
-         * @param {function(Object)=} errorCb Error callback with one argument:
-         *   `httpResponse`.
-         *
-         * @returns {Object} An empty reference that will be
-         *   populated with the actual data once the response is returned
-         *   from the server.
-         *
-         * <em>
-         * (The remote method definition does not provide any description.
-         * This usually means the response is a `Merchant` object.)
-         * </em>
-         */
-        R.merchant = function() {
-          var TargetResource = $injector.get("Merchant");
-          var action = TargetResource["::get::deal::merchant"];
-          return action.apply(R, arguments);
-        };
-
-        /**
-         * @ngdoc method
-         * @name lbServices.Deal#shop
-         * @methodOf lbServices.Deal
-         *
-         * @description
-         *
-         * Fetches belongsTo relation shop
-         *
-         * @param {Object=} parameters Request parameters.
-         *
-         *  - `id` – `{*}` - PersistedModel id
-         *
-         *  - `refresh` – `{boolean=}` - 
-         *
-         * @param {function(Object,Object)=} successCb
-         *   Success callback with two arguments: `value`, `responseHeaders`.
-         *
-         * @param {function(Object)=} errorCb Error callback with one argument:
-         *   `httpResponse`.
-         *
-         * @returns {Object} An empty reference that will be
-         *   populated with the actual data once the response is returned
-         *   from the server.
-         *
-         * <em>
-         * (The remote method definition does not provide any description.
-         * This usually means the response is a `Shop` object.)
-         * </em>
-         */
-        R.shop = function() {
-          var TargetResource = $injector.get("Shop");
-          var action = TargetResource["::get::deal::shop"];
-          return action.apply(R, arguments);
-        };
-
-        /**
-         * @ngdoc method
-         * @name lbServices.Deal#bill
-         * @methodOf lbServices.Deal
-         *
-         * @description
-         *
-         * Fetches belongsTo relation bill
-         *
-         * @param {Object=} parameters Request parameters.
-         *
-         *  - `id` – `{*}` - PersistedModel id
-         *
-         *  - `refresh` – `{boolean=}` - 
-         *
-         * @param {function(Object,Object)=} successCb
-         *   Success callback with two arguments: `value`, `responseHeaders`.
-         *
-         * @param {function(Object)=} errorCb Error callback with one argument:
-         *   `httpResponse`.
-         *
-         * @returns {Object} An empty reference that will be
-         *   populated with the actual data once the response is returned
-         *   from the server.
-         *
-         * <em>
-         * (The remote method definition does not provide any description.
-         * This usually means the response is a `Bill` object.)
-         * </em>
-         */
-        R.bill = function() {
-          var TargetResource = $injector.get("Bill");
-          var action = TargetResource["::get::deal::bill"];
-          return action.apply(R, arguments);
-        };
-
     return R;
   }]);
 
@@ -5873,19 +5739,19 @@ module.factory(
         // INTERNAL. Use Bill.merchant() instead.
         "prototype$__get__merchant": {
           url: urlBase + "/bills/:id/merchant",
-          method: "GET"
+          method: "GET",
         },
 
         // INTERNAL. Use Bill.shop() instead.
         "prototype$__get__shop": {
           url: urlBase + "/bills/:id/shop",
-          method: "GET"
+          method: "GET",
         },
 
         // INTERNAL. Use Bill.agent() instead.
         "prototype$__get__agent": {
           url: urlBase + "/bills/:id/agent",
-          method: "GET"
+          method: "GET",
         },
 
         /**
@@ -5923,7 +5789,7 @@ module.factory(
          */
         "create": {
           url: urlBase + "/bills",
-          method: "POST"
+          method: "POST",
         },
 
         /**
@@ -5961,7 +5827,7 @@ module.factory(
          */
         "upsert": {
           url: urlBase + "/bills",
-          method: "PUT"
+          method: "PUT",
         },
 
         /**
@@ -5993,7 +5859,7 @@ module.factory(
          */
         "exists": {
           url: urlBase + "/bills/:id/exists",
-          method: "GET"
+          method: "GET",
         },
 
         /**
@@ -6026,7 +5892,7 @@ module.factory(
          */
         "findById": {
           url: urlBase + "/bills/:id",
-          method: "GET"
+          method: "GET",
         },
 
         /**
@@ -6058,9 +5924,9 @@ module.factory(
          * </em>
          */
         "find": {
-          isArray: true,
           url: urlBase + "/bills",
-          method: "GET"
+          method: "GET",
+          isArray: true,
         },
 
         /**
@@ -6093,7 +5959,7 @@ module.factory(
          */
         "findOne": {
           url: urlBase + "/bills/findOne",
-          method: "GET"
+          method: "GET",
         },
 
         /**
@@ -6127,7 +5993,7 @@ module.factory(
          */
         "updateAll": {
           url: urlBase + "/bills/update",
-          method: "POST"
+          method: "POST",
         },
 
         /**
@@ -6157,7 +6023,7 @@ module.factory(
          */
         "deleteById": {
           url: urlBase + "/bills/:id",
-          method: "DELETE"
+          method: "DELETE",
         },
 
         /**
@@ -6189,7 +6055,7 @@ module.factory(
          */
         "count": {
           url: urlBase + "/bills/count",
-          method: "GET"
+          method: "GET",
         },
 
         /**
@@ -6226,13 +6092,7 @@ module.factory(
          */
         "prototype$updateAttributes": {
           url: urlBase + "/bills/:id",
-          method: "PUT"
-        },
-
-        // INTERNAL. Use Deal.bill() instead.
-        "::get::deal::bill": {
-          url: urlBase + "/deals/:id/bill",
-          method: "GET"
+          method: "PUT",
         },
       }
     );
@@ -6542,7 +6402,7 @@ module.factory(
          */
         "create": {
           url: urlBase + "/inventories",
-          method: "POST"
+          method: "POST",
         },
 
         /**
@@ -6580,7 +6440,7 @@ module.factory(
          */
         "upsert": {
           url: urlBase + "/inventories",
-          method: "PUT"
+          method: "PUT",
         },
 
         /**
@@ -6612,7 +6472,7 @@ module.factory(
          */
         "exists": {
           url: urlBase + "/inventories/:id/exists",
-          method: "GET"
+          method: "GET",
         },
 
         /**
@@ -6645,7 +6505,7 @@ module.factory(
          */
         "findById": {
           url: urlBase + "/inventories/:id",
-          method: "GET"
+          method: "GET",
         },
 
         /**
@@ -6677,9 +6537,9 @@ module.factory(
          * </em>
          */
         "find": {
-          isArray: true,
           url: urlBase + "/inventories",
-          method: "GET"
+          method: "GET",
+          isArray: true,
         },
 
         /**
@@ -6712,7 +6572,7 @@ module.factory(
          */
         "findOne": {
           url: urlBase + "/inventories/findOne",
-          method: "GET"
+          method: "GET",
         },
 
         /**
@@ -6746,7 +6606,7 @@ module.factory(
          */
         "updateAll": {
           url: urlBase + "/inventories/update",
-          method: "POST"
+          method: "POST",
         },
 
         /**
@@ -6776,7 +6636,7 @@ module.factory(
          */
         "deleteById": {
           url: urlBase + "/inventories/:id",
-          method: "DELETE"
+          method: "DELETE",
         },
 
         /**
@@ -6808,7 +6668,7 @@ module.factory(
          */
         "count": {
           url: urlBase + "/inventories/count",
-          method: "GET"
+          method: "GET",
         },
 
         /**
@@ -6845,7 +6705,7 @@ module.factory(
          */
         "prototype$updateAttributes": {
           url: urlBase + "/inventories/:id",
-          method: "PUT"
+          method: "PUT",
         },
       }
     );
@@ -7047,7 +6907,7 @@ module.factory(
          */
         "create": {
           url: urlBase + "/orders",
-          method: "POST"
+          method: "POST",
         },
 
         /**
@@ -7085,7 +6945,7 @@ module.factory(
          */
         "upsert": {
           url: urlBase + "/orders",
-          method: "PUT"
+          method: "PUT",
         },
 
         /**
@@ -7117,7 +6977,7 @@ module.factory(
          */
         "exists": {
           url: urlBase + "/orders/:id/exists",
-          method: "GET"
+          method: "GET",
         },
 
         /**
@@ -7150,7 +7010,7 @@ module.factory(
          */
         "findById": {
           url: urlBase + "/orders/:id",
-          method: "GET"
+          method: "GET",
         },
 
         /**
@@ -7182,9 +7042,9 @@ module.factory(
          * </em>
          */
         "find": {
-          isArray: true,
           url: urlBase + "/orders",
-          method: "GET"
+          method: "GET",
+          isArray: true,
         },
 
         /**
@@ -7217,7 +7077,7 @@ module.factory(
          */
         "findOne": {
           url: urlBase + "/orders/findOne",
-          method: "GET"
+          method: "GET",
         },
 
         /**
@@ -7251,7 +7111,7 @@ module.factory(
          */
         "updateAll": {
           url: urlBase + "/orders/update",
-          method: "POST"
+          method: "POST",
         },
 
         /**
@@ -7281,7 +7141,7 @@ module.factory(
          */
         "deleteById": {
           url: urlBase + "/orders/:id",
-          method: "DELETE"
+          method: "DELETE",
         },
 
         /**
@@ -7313,7 +7173,7 @@ module.factory(
          */
         "count": {
           url: urlBase + "/orders/count",
-          method: "GET"
+          method: "GET",
         },
 
         /**
@@ -7350,7 +7210,7 @@ module.factory(
          */
         "prototype$updateAttributes": {
           url: urlBase + "/orders/:id",
-          method: "PUT"
+          method: "PUT",
         },
       }
     );
@@ -7552,7 +7412,7 @@ module.factory(
          */
         "create": {
           url: urlBase + "/returns",
-          method: "POST"
+          method: "POST",
         },
 
         /**
@@ -7590,7 +7450,7 @@ module.factory(
          */
         "upsert": {
           url: urlBase + "/returns",
-          method: "PUT"
+          method: "PUT",
         },
 
         /**
@@ -7622,7 +7482,7 @@ module.factory(
          */
         "exists": {
           url: urlBase + "/returns/:id/exists",
-          method: "GET"
+          method: "GET",
         },
 
         /**
@@ -7655,7 +7515,7 @@ module.factory(
          */
         "findById": {
           url: urlBase + "/returns/:id",
-          method: "GET"
+          method: "GET",
         },
 
         /**
@@ -7687,9 +7547,9 @@ module.factory(
          * </em>
          */
         "find": {
-          isArray: true,
           url: urlBase + "/returns",
-          method: "GET"
+          method: "GET",
+          isArray: true,
         },
 
         /**
@@ -7722,7 +7582,7 @@ module.factory(
          */
         "findOne": {
           url: urlBase + "/returns/findOne",
-          method: "GET"
+          method: "GET",
         },
 
         /**
@@ -7756,7 +7616,7 @@ module.factory(
          */
         "updateAll": {
           url: urlBase + "/returns/update",
-          method: "POST"
+          method: "POST",
         },
 
         /**
@@ -7786,7 +7646,7 @@ module.factory(
          */
         "deleteById": {
           url: urlBase + "/returns/:id",
-          method: "DELETE"
+          method: "DELETE",
         },
 
         /**
@@ -7818,7 +7678,7 @@ module.factory(
          */
         "count": {
           url: urlBase + "/returns/count",
-          method: "GET"
+          method: "GET",
         },
 
         /**
@@ -7855,7 +7715,7 @@ module.factory(
          */
         "prototype$updateAttributes": {
           url: urlBase + "/returns/:id",
-          method: "PUT"
+          method: "PUT",
         },
       }
     );
@@ -8057,7 +7917,7 @@ module.factory(
          */
         "create": {
           url: urlBase + "/skus",
-          method: "POST"
+          method: "POST",
         },
 
         /**
@@ -8095,7 +7955,7 @@ module.factory(
          */
         "upsert": {
           url: urlBase + "/skus",
-          method: "PUT"
+          method: "PUT",
         },
 
         /**
@@ -8127,7 +7987,7 @@ module.factory(
          */
         "exists": {
           url: urlBase + "/skus/:id/exists",
-          method: "GET"
+          method: "GET",
         },
 
         /**
@@ -8160,7 +8020,7 @@ module.factory(
          */
         "findById": {
           url: urlBase + "/skus/:id",
-          method: "GET"
+          method: "GET",
         },
 
         /**
@@ -8192,9 +8052,9 @@ module.factory(
          * </em>
          */
         "find": {
-          isArray: true,
           url: urlBase + "/skus",
-          method: "GET"
+          method: "GET",
+          isArray: true,
         },
 
         /**
@@ -8227,7 +8087,7 @@ module.factory(
          */
         "findOne": {
           url: urlBase + "/skus/findOne",
-          method: "GET"
+          method: "GET",
         },
 
         /**
@@ -8261,7 +8121,7 @@ module.factory(
          */
         "updateAll": {
           url: urlBase + "/skus/update",
-          method: "POST"
+          method: "POST",
         },
 
         /**
@@ -8291,7 +8151,7 @@ module.factory(
          */
         "deleteById": {
           url: urlBase + "/skus/:id",
-          method: "DELETE"
+          method: "DELETE",
         },
 
         /**
@@ -8323,7 +8183,7 @@ module.factory(
          */
         "count": {
           url: urlBase + "/skus/count",
-          method: "GET"
+          method: "GET",
         },
 
         /**
@@ -8360,7 +8220,7 @@ module.factory(
          */
         "prototype$updateAttributes": {
           url: urlBase + "/skus/:id",
-          method: "PUT"
+          method: "PUT",
         },
       }
     );
@@ -8506,7 +8366,6 @@ module.factory(
 module
   .factory('LoopBackAuth', function() {
     var props = ['accessTokenId', 'currentUserId'];
-    var propsPrefix = '$LoopBack$';
 
     function LoopBackAuth() {
       var self = this;
@@ -8537,25 +8396,18 @@ module
       this.currentUserData = null;
     }
 
-    LoopBackAuth.prototype.clearStorage = function() {
-      props.forEach(function(name) {
-        save(sessionStorage, name, null);
-        save(localStorage, name, null);
-      });
-    };
-
     return new LoopBackAuth();
 
     // Note: LocalStorage converts the value to string
     // We are using empty string as a marker for null/undefined values.
     function save(storage, name, value) {
-      var key = propsPrefix + name;
+      var key = '$LoopBack$' + name;
       if (value == null) value = '';
       storage[key] = value;
     }
 
     function load(name) {
-      var key = propsPrefix + name;
+      var key = '$LoopBack$' + name;
       return localStorage[key] || sessionStorage[key] || null;
     }
   })

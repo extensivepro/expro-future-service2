@@ -1,7 +1,7 @@
 (function(){ 
 /**
  * State-based routing for AngularJS
- * @version v0.2.13
+ * @version v0.2.12
  * @link http://angular-ui.github.com/
  * @license MIT License, http://www.opensource.org/licenses/MIT
  */
@@ -188,7 +188,7 @@ function omit(obj) {
   var copy = {};
   var keys = Array.prototype.concat.apply(Array.prototype, Array.prototype.slice.call(arguments, 1));
   for (var key in obj) {
-    if (indexOf(keys, key) == -1) copy[key] = obj[key];
+    if (keys.indexOf(key) == -1) copy[key] = obj[key];
   }
   return copy;
 }
@@ -203,12 +203,10 @@ function pluck(collection, key) {
 }
 
 function filter(collection, callback) {
-  var array = isArray(collection);
-  var result = array ? [] : {};
+  var result = isArray(collection) ? [] : {};
   forEach(collection, function(val, i) {
-    if (callback(val, i)) {
-      result[array ? result.length : i] = val;
-    }
+    if (callback(val, i))
+      result[i] = val;
   });
   return result;
 }
@@ -757,11 +755,9 @@ function UrlMatcher(pattern, config, parentMatcher) {
       compiled = '^', last = 0, m,
       segments = this.segments = [],
       parentParams = parentMatcher ? parentMatcher.params : {},
-      params = this.params = parentMatcher ? parentMatcher.params.$$new() : new $$UMFP.ParamSet(),
-      paramNames = [];
+      params = this.params = parentMatcher ? parentMatcher.params.$$new() : new $$UMFP.ParamSet();
 
   function addParameter(id, type, config, location) {
-    paramNames.push(id);
     if (parentParams[id]) return parentParams[id];
     if (!/^\w+(-+\w+)*(?:\[\])?$/.test(id)) throw new Error("Invalid parameter name '" + id + "' in pattern '" + pattern + "'");
     if (params[id]) throw new Error("Duplicate parameter name '" + id + "' in pattern '" + pattern + "'");
@@ -835,7 +831,6 @@ function UrlMatcher(pattern, config, parentMatcher) {
 
   this.regexp = new RegExp(compiled, config.caseInsensitive ? 'i' : undefined);
   this.prefix = segments[0];
-  this.$$paramNames = paramNames;
 }
 
 /**
@@ -951,7 +946,7 @@ UrlMatcher.prototype.exec = function (path, searchParams) {
  *    pattern has no parameters, an empty array is returned.
  */
 UrlMatcher.prototype.parameters = function (param) {
-  if (!isDefined(param)) return this.$$paramNames;
+  if (!isDefined(param)) return this.params.$$keys();
   return this.params[param] || null;
 };
 
@@ -1167,51 +1162,28 @@ Type.prototype.$asArray = function(mode, isSearch) {
   return new ArrayType(this, mode);
 
   function ArrayType(type, mode) {
-    function bindTo(type, callbackName) {
+    function bindTo(thisObj, callback) {
       return function() {
-        return type[callbackName].apply(type, arguments);
+        return callback.apply(thisObj, arguments);
       };
     }
 
-    // Wrap non-array value as array
-    function arrayWrap(val) { return isArray(val) ? val : (isDefined(val) ? [ val ] : []); }
-    // Unwrap array value for "auto" mode. Return undefined for empty array.
-    function arrayUnwrap(val) {
-      switch(val.length) {
-        case 0: return undefined;
-        case 1: return mode === "auto" ? val[0] : val;
-        default: return val;
-      }
-    }
-    function falsey(val) { return !val; }
-
-    // Wraps type (.is/.encode/.decode) functions to operate on each value of an array
-    function arrayHandler(callback, allTruthyMode) {
+    function arrayHandler(callback, reducefn) {
+      // Wraps type functions to operate on each value of an array
       return function handleArray(val) {
-        val = arrayWrap(val);
+        if (!isArray(val)) val = [ val ];
         var result = map(val, callback);
-        if (allTruthyMode === true)
-          return filter(result, falsey).length === 0;
-        return arrayUnwrap(result);
+        if (reducefn)
+          return result.reduce(reducefn, true);
+        return (result && result.length == 1 && mode === "auto") ? result[0] : result;
       };
     }
 
-    // Wraps type (.equals) functions to operate on each value of an array
-    function arrayEqualsHandler(callback) {
-      return function handleArray(val1, val2) {
-        var left = arrayWrap(val1), right = arrayWrap(val2);
-        if (left.length !== right.length) return false;
-        for (var i = 0; i < left.length; i++) {
-          if (!callback(left[i], right[i])) return false;
-        }
-        return true;
-      };
-    }
-
-    this.encode = arrayHandler(bindTo(type, 'encode'));
-    this.decode = arrayHandler(bindTo(type, 'decode'));
-    this.is     = arrayHandler(bindTo(type, 'is'), true);
-    this.equals = arrayEqualsHandler(bindTo(type, 'equals'));
+    function alltruthy(val, memo) { return val && memo; }
+    this.encode = arrayHandler(bindTo(this, type.encode));
+    this.decode = arrayHandler(bindTo(this, type.decode));
+    this.equals = arrayHandler(bindTo(this, type.equals), alltruthy);
+    this.is     = arrayHandler(bindTo(this, type.is),     alltruthy);
     this.pattern = type.pattern;
     this.$arrayMode = mode;
   }
@@ -1232,8 +1204,9 @@ function $UrlMatcherFactory() {
 
   var isCaseInsensitive = false, isStrictMode = true, defaultSquashPolicy = false;
 
-  function valToString(val) { return val != null ? val.toString().replace(/\//g, "%2F") : val; }
-  function valFromString(val) { return val != null ? val.toString().replace(/%2F/g, "/") : val; }
+  function valToString(val) { return val != null ? val.toString().replace("/", "%2F") : val; }
+  function valFromString(val) { return val != null ? val.toString().replace("%2F", "/") : val; }
+  function angularEquals(left, right) { return angular.equals(left, right); }
 //  TODO: in 1.0, make string .is() return false if value is undefined by default.
 //  function regexpMatches(val) { /*jshint validthis:true */ return isDefined(val) && this.pattern.test(val); }
   function regexpMatches(val) { /*jshint validthis:true */ return this.pattern.test(val); }
@@ -1258,37 +1231,16 @@ function $UrlMatcherFactory() {
       pattern: /0|1/
     },
     date: {
-      encode: function (val) {
-        if (!this.is(val))
-          return undefined;
-        return [ val.getFullYear(),
+      encode: function (val) { return [
+          val.getFullYear(),
           ('0' + (val.getMonth() + 1)).slice(-2),
           ('0' + val.getDate()).slice(-2)
         ].join("-");
       },
-      decode: function (val) {
-        if (this.is(val)) return val;
-        var match = this.capture.exec(val);
-        return match ? new Date(match[1], match[2] - 1, match[3]) : undefined;
-      },
+      decode: function (val) { return new Date(val); },
       is: function(val) { return val instanceof Date && !isNaN(val.valueOf()); },
-      equals: function (a, b) { return this.is(a) && this.is(b) && a.toISOString() === b.toISOString(); },
-      pattern: /[0-9]{4}-(?:0[1-9]|1[0-2])-(?:0[1-9]|[1-2][0-9]|3[0-1])/,
-      capture: /([0-9]{4})-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])/
-    },
-    json: {
-      encode: angular.toJson,
-      decode: angular.fromJson,
-      is: angular.isObject,
-      equals: angular.equals,
-      pattern: /[^/]*/
-    },
-    any: { // does not encode/decode
-      encode: angular.identity,
-      decode: angular.identity,
-      is: angular.identity,
-      equals: angular.equals,
-      pattern: /.*/
+      equals: function (a, b) { return a.toISOString() === b.toISOString(); },
+      pattern: /[0-9]{4}-(?:0[1-9]|1[0-2])-(?:0[1-9]|[1-2][0-9]|3[0-1])/
     }
   };
 
@@ -1555,29 +1507,33 @@ function $UrlMatcherFactory() {
 
   this.Param = function Param(id, type, config, location) {
     var self = this;
-    config = unwrapShorthand(config);
-    type = getType(config, type, location);
+    var defaultValueConfig = getDefaultValueConfig(config);
+    config = config || {};
+    type = getType(config, type);
     var arrayMode = getArrayMode();
     type = arrayMode ? type.$asArray(arrayMode, location === "search") : type;
-    if (type.name === "string" && !arrayMode && location === "path" && config.value === undefined)
-      config.value = ""; // for 0.2.x; in 0.3.0+ do not automatically default to ""
-    var isOptional = config.value !== undefined;
+    if (type.name === "string" && !arrayMode && location === "path" && defaultValueConfig.value === undefined)
+      defaultValueConfig.value = ""; // for 0.2.x; in 0.3.0+ do not automatically default to ""
+    var isOptional = defaultValueConfig.value !== undefined;
     var squash = getSquashPolicy(config, isOptional);
     var replace = getReplace(config, arrayMode, isOptional, squash);
 
-    function unwrapShorthand(config) {
+    function getDefaultValueConfig(config) {
       var keys = isObject(config) ? objectKeys(config) : [];
       var isShorthand = indexOf(keys, "value") === -1 && indexOf(keys, "type") === -1 &&
                         indexOf(keys, "squash") === -1 && indexOf(keys, "array") === -1;
-      if (isShorthand) config = { value: config };
-      config.$$fn = isInjectable(config.value) ? config.value : function () { return config.value; };
-      return config;
+      var configValue = isShorthand ? config : config.value;
+      var result = {
+        fn: isInjectable(configValue) ? configValue : function () { return result.value; },
+        value: configValue
+      };
+      return result;
     }
 
-    function getType(config, urlType, location) {
+    function getType(config, urlType) {
       if (config.type && urlType) throw new Error("Param '"+id+"' has two type configurations.");
       if (urlType) return urlType;
-      if (!config.type) return (location === "config" ? $types.any : $types.string);
+      if (!config.type) return $types.string;
       return config.type instanceof Type ? config.type : new Type(config.type);
     }
 
@@ -1616,7 +1572,7 @@ function $UrlMatcherFactory() {
      */
     function $$getDefaultValue() {
       if (!injector) throw new Error("Injectable functions cannot be called at configuration time");
-      return injector.invoke(config.$$fn);
+      return injector.invoke(defaultValueConfig.fn);
     }
 
     /**
@@ -1638,14 +1594,13 @@ function $UrlMatcherFactory() {
     extend(this, {
       id: id,
       type: type,
-      location: location,
       array: arrayMode,
+      config: config,
       squash: squash,
       replace: replace,
       isOptional: isOptional,
-      value: $value,
       dynamic: undefined,
-      config: config,
+      value: $value,
       toString: toString
     });
   };
@@ -1692,7 +1647,7 @@ function $UrlMatcherFactory() {
         param = self[key];
         val = paramValues[key];
         isOptional = !val && param.isOptional;
-        result = result && (isOptional || !!param.type.is(val));
+        result = result && (isOptional || param.type.is(val));
       });
       return result;
     },
@@ -1973,7 +1928,7 @@ function $UrlRouterProvider(   $locationProvider,   $urlMatcherFactory) {
   $get.$inject = ['$location', '$rootScope', '$injector', '$browser'];
   function $get(   $location,   $rootScope,   $injector,   $browser) {
 
-    var baseHref = $browser.baseHref(), location = $location.url(), lastPushedUrl;
+    var baseHref = $browser.baseHref(), location = $location.url();
 
     function appendBasePath(url, isHtml5, absolute) {
       if (baseHref === '/') return url;
@@ -1985,9 +1940,6 @@ function $UrlRouterProvider(   $locationProvider,   $urlMatcherFactory) {
     // TODO: Optimize groups of rules with non-empty prefix into some sort of decision tree
     function update(evt) {
       if (evt && evt.defaultPrevented) return;
-      var ignoreUpdate = lastPushedUrl && $location.url() === lastPushedUrl;
-      lastPushedUrl = undefined;
-      if (ignoreUpdate) return true;
 
       function check(rule) {
         var handled = rule($injector, $location);
@@ -2060,7 +2012,6 @@ function $UrlRouterProvider(   $locationProvider,   $urlMatcherFactory) {
 
       push: function(urlMatcher, params, options) {
         $location.url(urlMatcher.format(params || {}));
-        lastPushedUrl = options && options.$$avoidResync ? $location.url() : undefined;
         if (options && options.replace) $location.replace();
       },
 
@@ -2190,7 +2141,7 @@ function $StateProvider(   $urlRouterProvider,   $urlMatcherFactory) {
     ownParams: function(state) {
       var params = state.url && state.url.params || new $$UMFP.ParamSet();
       forEach(state.params || {}, function(config, id) {
-        if (!params[id]) params[id] = new $$UMFP.Param(id, null, config, "config");
+        if (!params[id]) params[id] = new $$UMFP.Param(id, null, config);
       });
       return params;
     },
@@ -2316,7 +2267,7 @@ function $StateProvider(   $urlRouterProvider,   $urlMatcherFactory) {
     if (!state[abstractKey] && state.url) {
       $urlRouterProvider.when(state.url, ['$match', '$stateParams', function ($match, $stateParams) {
         if ($state.$current.navigable != state || !equalForKeys($match, $stateParams)) {
-          $state.transitionTo(state, $match, { inherit: true, location: false });
+          $state.transitionTo(state, $match, { location: false });
         }
       }]);
     }
@@ -3197,7 +3148,7 @@ function $StateProvider(   $urlRouterProvider,   $urlMatcherFactory) {
 
         if (options.location && to.navigable) {
           $urlRouter.push(to.navigable.url, to.navigable.locals.globals.$stateParams, {
-            $$avoidResync: true, replace: options.location === 'replace'
+            replace: options.location === 'replace'
           });
         }
 
@@ -3293,9 +3244,15 @@ function $StateProvider(   $urlRouterProvider,   $urlMatcherFactory) {
       options = extend({ relative: $state.$current }, options || {});
       var state = findState(stateOrName, options.relative);
 
-      if (!isDefined(state)) { return undefined; }
-      if ($state.$current !== state) { return false; }
-      return params ? equalForKeys(state.params.$$values(params), $stateParams) : true;
+      if (!isDefined(state)) {
+        return undefined;
+      }
+
+      if ($state.$current !== state) {
+        return false;
+      }
+
+      return isDefined(params) && params !== null ? angular.equals($stateParams, params) : true;
     };
 
     /**
@@ -3359,9 +3316,13 @@ function $StateProvider(   $urlRouterProvider,   $urlMatcherFactory) {
       }
 
       var state = findState(stateOrName, options.relative);
-      if (!isDefined(state)) { return undefined; }
-      if (!isDefined($state.$current.includes[state.name])) { return false; }
-      return params ? equalForKeys(state.params.$$values(params), $stateParams, objectKeys(params)) : true;
+      if (!isDefined(state)) {
+        return undefined;
+      }
+      if (!isDefined($state.$current.includes[state.name])) {
+        return false;
+      }
+      return equalForKeys(params, $stateParams);
     };
 
 
@@ -4177,10 +4138,14 @@ function $StateRefActiveDirective($state, $stateParams, $interpolate) {
 
       function isMatch() {
         if (typeof $attrs.uiSrefActiveEq !== 'undefined') {
-          return state && $state.is(state.name, params);
+          return $state.$current.self === state && matchesParams();
         } else {
-          return state && $state.includes(state.name, params);
+          return state && $state.includes(state.name) && matchesParams();
         }
+      }
+
+      function matchesParams() {
+        return !params || equalForKeys(params, $stateParams);
       }
     }]
   };

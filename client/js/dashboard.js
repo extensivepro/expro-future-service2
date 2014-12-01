@@ -222,7 +222,7 @@ var ResetPasswordModalInstanceCtrl = function ($scope, $modalInstance, $rootScop
 /**
  * List Controller
  */
-app.controller('ListCtrl', function ListCtrl($scope) {
+app.controller('ListCtrl', function ListCtrl($scope, $modal) {
   $scope.entities = []
   $scope.resource = undefined
   $scope.orderOptions = ['createdAt DESC']
@@ -231,6 +231,8 @@ app.controller('ListCtrl', function ListCtrl($scope) {
     orFields: ['name', 'phone'],
   }
   $scope.includes = []
+  $scope.createModalOption = undefined
+  $scope.detailModalOption = undefined
 
   $scope.fetch = function () {
     var filter = { 
@@ -258,12 +260,54 @@ app.controller('ListCtrl', function ListCtrl($scope) {
     })
   }
   
+  var modal = function (modalOption, entity) {
+    if(!modalOption) return
+    if(entity) {
+      modalOption.resolve = {
+        entity: function () {
+          return entity
+        }
+      }
+    }
+    modalOption.size = modal.size || 'lg'
+    var modalInstance = $modal.open(modalOption);
+
+    modalInstance.result.then(function (entity) {
+      $scope.fetch()
+    }, function () {
+      console.info('Modal dismissed at: ' + new Date());
+    });
+  }
+  
+  $scope.showCreate = function () {
+    modal($scope.createModalOption)
+  }
+
   $scope.showDetail = function (entity) {
-    console.log(entity)
+    modal($scope.detailModalOption, entity)
   }
   
   $scope.init = function() {
     $scope.fetch()
+  }
+})
+
+app.controller('CreateModalInstanceCtrl', function ($scope, $modalInstance) {
+
+  $scope.entity = {}
+  $scope.resource = undefined
+  	
+  $scope.tryCreate = function () {
+    $scope.alerts = []
+    $scope.resource.create($scope.entity, function (entity) {
+      $modalInstance.close(entity)
+    }, function (res) {
+      $scope.alerts.push({type: 'danger', msg: '创建失败'})
+    })
+  }
+  
+  $scope.cancel = function () {
+    $modalInstance.dismiss()
   }
 })
 /**
@@ -341,59 +385,23 @@ app.controller('MembersCtrl', function MembersCtrl($scope, Member, $controller, 
   $controller('ListCtrl', {$scope: $scope})
   $scope.resource = Member
   $scope.search.orFields = ['name', 'phone']
-  
-  $scope.showCreate = function () {
-    var modalInstance = $modal.open({
-      templateUrl: 'partials/member-add.html',
-      controller: CreateMemberModalInstanceCtrl,
-      size: 'lg'
-    });
-
-    modalInstance.result.then(function (member) {
-      $scope.fetch()
-    }, function () {
-      console.info('Modal dismissed at: ' + new Date());
-    });
+  $scope.createModalOption = {
+    templateUrl: 'partials/member-add.html',
+    controller: CreateMemberModalInstanceCtrl,
   }
-  
-  $scope.showDetail = function (entity) {
-    var modalInstance = $modal.open({
-      templateUrl: 'partials/member-detail.html',
-      controller: MemberDetailModalInstanceCtrl,
-      size: 'lg',
-      resolve: {
-        entity: function () {
-          return entity
-        }
-      }
-    });
-
-    modalInstance.result.then(function (member) {
-      $scope.fetch()
-    }, function () {
-      console.info('Modal dismissed at: ' + new Date());
-    });
+  $scope.detailModalOption = {
+    templateUrl: 'partials/member-detail.html',
+    controller: MemberDetailModalInstanceCtrl,
   }
   
 })
 
-var CreateMemberModalInstanceCtrl = function ($scope, $modalInstance, $rootScope, Member, Employe) {
+var CreateMemberModalInstanceCtrl = function ($scope, $modalInstance, $controller, Member) {
+  $controller('CreateModalInstanceCtrl', {$scope: $scope, $modalInstance: $modalInstance})
+  $scope.resource = Member
 
   $scope.entity = {
     merchantID: $scope.currentEmploye.merchant.id
-  }
-  
-  $scope.tryCreate = function () {
-    $scope.alerts = []
-    Member.create($scope.entity, function (member) {
-      $modalInstance.close(member);
-    }, function (res) {
-      $scope.alerts.push({type: 'danger', msg: '创建会员失败'})
-    })
-  }
-  
-  $scope.cancel = function () {
-    $modalInstance.dismiss()
   }
   
   $scope.blurCb = function (evt) {
@@ -574,49 +582,20 @@ app.controller('EmployesCtrl', function EmployesCtrl($scope, Employe, $controlle
   $scope.resource = Employe
   $scope.search.orFields = ['name', 'phone']
   $scope.includes = [{shop:'merchant'}]
-  
-  $scope.create = function () {
-    var modalInstance = $modal.open({
-      templateUrl: 'partials/member-add.html',
-      controller: CreateEmployeModalInstanceCtrl,
-      size: 'lg'
-    });
-
-    modalInstance.result.then(function (member) {
-      $scope.fetch()
-    }, function () {
-      console.info('Modal dismissed at: ' + new Date());
-    });
+  $scope.createModalOption = {
+    templateUrl: 'partials/employe-add.html',
+    controller: CreateEmployeModalInstanceCtrl,
   }
   
 })
 
-var CreateEmployeModalInstanceCtrl = function ($scope, $modalInstance, $rootScope, Employe) {
+var CreateEmployeModalInstanceCtrl = function ($scope, Employe, $controller, $modalInstance) {
+  $controller('CreateModalInstanceCtrl', {$scope: $scope, $modalInstance: $modalInstance})
+  $scope.resource = Employe
 
   $scope.entity = {
-    merchant: {
-      merchantID: "e20dccdf039b3874",
-      fullName: "泛盈信息科技有限公司",
-      "name": "泛盈科技"
-    }
-  }
-  
-  $scope.alerts = []
-	
-  $scope.tryCreate = function () {
-    Employe.create($scope.entity, function (member) {
-      $modalInstance.close(member);
-    }, function (res) {
-      $scope.alerts.push({type: 'danger', msg: '创建会员失败'})
-    })
-  }
-  
-  $scope.cancel = function () {
-    $modalInstance.dismiss()
-  }
-  
-  $scope.blurCb = function (evt) {
-    $scope.entity.code = $scope.entity.phone
+    merchantID: $scope.currentEmploye.merchant.id,
+    shopID: $scope.currentEmploye.shopID
   }
 }
 /**
@@ -703,7 +682,127 @@ app.controller('DealsCtrl', function DealsCtrl($scope, Deal, $controller) {
   $scope.resource = Deal
   $scope.search.orFields = ['merchant.name']
   $scope.includes = ['merchant', 'shop', 'bill']
+  $scope.createModalOption = {
+    templateUrl: 'partials/deal-add.html',
+    controller: CreateDealModalInstanceCtrl
+  }
+  $scope.detailModalOption = {
+    templateUrl: 'partials/deal-detail.html',
+    controller: DealDetailModalInstanceCtrl
+  }
+  
 })
+
+var CreateDealModalInstanceCtrl = function ($scope, $modalInstance, $controller, Deal) {
+  $controller('CreateModalInstanceCtrl', {$scope: $scope, $modalInstance: $modalInstance})
+  $scope.resource = Deal
+
+  $scope.entity = {
+    merchantID: $scope.currentEmploye.merchant.id,
+    shopID: $scope.currentEmploye.shopID
+  }
+}
+
+var DealDetailModalInstanceCtrl = function ($scope, $modalInstance, entity, Point, Bill) {
+  
+  $scope.entity = entity
+  
+  $scope.alerts = []
+
+  $scope.status = {
+    isPointOpen: false,
+    isPrepayOpen: false
+  }
+  
+  $scope.pointValue = 16
+  $scope.prepayValue = 10
+  
+  $scope.cancel = function () {
+    $modalInstance.dismiss()
+  }
+  
+  $scope.save = function () {
+    $modalInstance.dismiss()
+  }
+  
+  $scope.toggleDropdown = function($event) {
+    $event.preventDefault()
+    $event.stopPropagation()
+    $scope.status.isopen = !$scope.status.isopen
+  }
+  
+  var operatePoint = function (point, reason) {
+    Point.create({
+      point: point,
+      memberID: entity.id,
+      agentID: $scope.currentUser.employeID,
+      reason: reason
+    }, function (point) {
+      entity.postPoint = point.postPoint
+      entity.postTotalPoint = point.postTotalPoint
+    }, function (res) {
+      $scope.alerts.push({type: 'danger', msg: '积分操作失败'})
+    })
+  }
+  
+  $scope.accumulatePoint = function () {
+    operatePoint($scope.pointValue, "手动累积")
+  }
+  
+  $scope.exchangeGift = function () {
+    operatePoint(0-$scope.pointValue, "手动兑换积分")
+  }
+  
+  var operatePrepay = function (dealType ,accountType) {
+    var amount = $scope.prepayValue*100
+    var now = Math.floor(Date.now()/1000)
+    var opt = {
+      dealType: dealType,
+      amount: amount,
+      billNumber: now,
+      shopID: $scope.currentEmploye.shopID,
+      merchantID: $scope.currentEmploye.merchantID,
+      agentID: $scope.currentUser.employeID,
+      cashSettlement: {
+        "status": 'closed',
+        serialNumber: now,
+        amount: amount,
+        settledAt: now,
+        payType: 'cash'
+      },
+      memberSettlement: {
+        "status": 'closed',
+        serialNumber: now,
+        amount: amount,
+        settledAt: now,
+        payType: 'perpay'
+      }
+    }
+    
+    opt.memberSettlement[accountType] = {
+      id: entity.account.id,
+      "name": entity.account.name,
+      balance: entity.account.balance
+    }
+    Bill.create(opt, function (bill) {
+      if(accountType === "payeeAccount") {
+        entity.account.balance += amount 
+      } else {
+        entity.account.balance -= amount 
+      }
+    }, function (res) {
+      $scope.alerts.push({type: 'danger', msg: '储值操作失败'})
+    })
+  }
+  $scope.prepay = function () {
+    operatePrepay('prepay', "payeeAccount")
+  }
+  
+  $scope.withdraw = function () {
+    operatePrepay("withdraw", "payerAccount")
+  }
+  
+}
 /**
  * Loading Directive
  * @see http://tobiasahlin.com/spinkit/

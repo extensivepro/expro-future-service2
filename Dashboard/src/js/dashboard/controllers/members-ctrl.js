@@ -5,59 +5,23 @@ app.controller('MembersCtrl', function MembersCtrl($scope, Member, $controller, 
   $controller('ListCtrl', {$scope: $scope})
   $scope.resource = Member
   $scope.search.orFields = ['name', 'phone']
-  
-  $scope.showCreate = function () {
-    var modalInstance = $modal.open({
-      templateUrl: 'partials/member-add.html',
-      controller: CreateMemberModalInstanceCtrl,
-      size: 'lg'
-    });
-
-    modalInstance.result.then(function (member) {
-      $scope.fetch()
-    }, function () {
-      console.info('Modal dismissed at: ' + new Date());
-    });
+  $scope.createModalOption = {
+    templateUrl: 'partials/member-add.html',
+    controller: CreateMemberModalInstanceCtrl,
   }
-  
-  $scope.showDetail = function (entity) {
-    var modalInstance = $modal.open({
-      templateUrl: 'partials/member-detail.html',
-      controller: MemberDetailModalInstanceCtrl,
-      size: 'lg',
-      resolve: {
-        entity: function () {
-          return entity
-        }
-      }
-    });
-
-    modalInstance.result.then(function (member) {
-      $scope.fetch()
-    }, function () {
-      console.info('Modal dismissed at: ' + new Date());
-    });
+  $scope.detailModalOption = {
+    templateUrl: 'partials/member-detail.html',
+    controller: MemberDetailModalInstanceCtrl,
   }
   
 })
 
-var CreateMemberModalInstanceCtrl = function ($scope, $modalInstance, $rootScope, Member, Employe) {
+var CreateMemberModalInstanceCtrl = function ($scope, $modalInstance, $controller, Member) {
+  $controller('CreateModalInstanceCtrl', {$scope: $scope, $modalInstance: $modalInstance})
+  $scope.resource = Member
 
   $scope.entity = {
     merchantID: $scope.currentEmploye.merchant.id
-  }
-  
-  $scope.tryCreate = function () {
-    $scope.alerts = []
-    Member.create($scope.entity, function (member) {
-      $modalInstance.close(member);
-    }, function (res) {
-      $scope.alerts.push({type: 'danger', msg: '创建会员失败'})
-    })
-  }
-  
-  $scope.cancel = function () {
-    $modalInstance.dismiss()
   }
   
   $scope.blurCb = function (evt) {

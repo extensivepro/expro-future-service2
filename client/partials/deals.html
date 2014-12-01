@@ -31,7 +31,7 @@
             </tr>
           </thead>
           <tbody>
-            <tr ng-repeat="entity in entities">
+            <tr ng-repeat="entity in entities" ng-click="showDetail(entity)" class="clcikable">
               <td>{{entity.id}}</td>
               <td>{{entity.serialNumber}}</td>
               <td>{{entity.fee/100 | currency: '￥'}}</td>
