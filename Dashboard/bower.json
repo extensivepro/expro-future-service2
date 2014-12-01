@@ -27,7 +27,8 @@
     "ef-services2": "https://github.com/extensivepro/bower-ef-services2.git",
     "moment": "~2.8.2",
     "angular-ui-utils": "~0.1.1",
-    "angular-morph": "*"
+    "angular-morph": "*",
+    "angular-wizard": "~0.4.0"
   },
   "repository": {
     "type": "git",

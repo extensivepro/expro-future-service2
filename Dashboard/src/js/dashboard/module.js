@@ -1,4 +1,4 @@
-var app = angular.module('Dashboard', ['ui.utils', 'ui.bootstrap', 'ui.router', 'ngCookies', 'ngMorph', 'expro-future2.services'])
+var app = angular.module('Dashboard', ['ui.utils', 'ui.bootstrap', 'ui.router', 'ngCookies', 'ngMorph', 'mgo-angular-wizard', 'expro-future2.services'])
 .config(['$httpProvider', function($httpProvider) {
 	$httpProvider.defaults.withCredentials = true
 }])

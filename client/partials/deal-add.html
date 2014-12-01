@@ -1,39 +1,91 @@
 <div class="modal-header">
-  <h3 class="modal-title text-center">新增雇员</h3>
+  <h3 class="modal-title text-center">新增交易</h3>
 </div>
 <div class="modal-body">
+  
+  <wizard on-finish="finishedWizard()"> 
+      <wz-step title="Starting">
+          <h1>This is the first step</h1>
+          <p>Here you can use whatever you want. You can use other directives, binding, etc.</p>
+          <input type="submit" wz-next value="Continue" />
+      </wz-step>
+      <wz-step title="Continuing">
+          <h1>Continuing</h1>
+          <p>You have continued here!</p>
+          <input type="submit" wz-next value="Go on" />
+      </wz-step>
+      <wz-step title="More steps">
+          <p>Even more steps!!</p>
+          <input type="submit" wz-next value="Finish now" />
+      </wz-step>
+  </wizard>
+  
   <form class="form-horizontal">
     <div class="form-group">
       <label class="col-sm-2 control-label">商户</label>
+      <div class="col-sm-4">
+        <p class="form-control-static">{{currentEmploye.merchant.name}}</p>
+      </div>
+      <label class="col-sm-2 control-label">门店</label>
+      <div class="col-sm-4">
+        <p class="form-control-static">{{currentEmploye.shop.name}}</p>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="col-sm-2 control-label">经手</label>
+      <div class="col-sm-4">
+        <p class="form-control-static">{{entity.seller.name}}</p>
+      </div>
+      <label class="col-sm-2 control-label">顾客</label>
+      <div class="col-sm-4">
+        <p class="form-control-static">{{entity.memberSettlement | billOwner}}</p>
+      </div>
+    </div>
+    
+    <div class="form-group">
+      <label class="col-sm-2 control-label">流水号</label>
       <div class="col-sm-10">
-        <p class="form-control-static">{{currentEmploye.merchant.name}} - {{currentEmploye.shop.name}}</p>
+        <p class="form-control-static">{{entity.serialNumber}}</p>
       </div>
     </div>
     
     <div class="form-group">
       <div class="col-sm-12">
-        <input type="text" class="form-control" placeholder="请输入名字" ng-model="entity.name">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>商品ID</th>
+              <th>商品名</th>
+              <th>零售价</th>
+              <th>成交价</th>
+              <th>数量</th>
+              <th class="text-right">小计</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr ng-repeat="item in entity.items">
+              <td>{{item.item.id}}</td>
+              <td>{{item.item.name}}</td>
+              <td>{{item.item.price/100 | currency: '￥'}}</td>
+              <td>{{item.dealPrice/100 | currency: '￥'}}</td>
+              <td>{{item.quantity}}</td>
+              <td class="text-right">{{item.quantity*item.dealPrice/100 | currency: '￥'}}</td>
+            </tr>
+          </tbody>
+          <tfoot>
+            <tr>
+              <td>总计</td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td>{{entity.quantity}}</td>
+              <td class="text-right">{{entity.fee/100 | currency: '￥'}}</td>
+            </tr>
+          </tfoot>
+        </table>
       </div>
     </div>
-    
-    <div class="form-group">
-      <div class="col-sm-12">
-        <input type="text" class="form-control" placeholder="请输入工号" ng-model="entity.jobNumber">
-      </div>
-    </div>
-    
-    <div class="form-group">
-      <div class="col-sm-12">
-        <input type="text" class="form-control" placeholder="请输入联系电话" ng-model="entity.phone">
-      </div>
-    </div>
-    
-    <div class="form-group">
-      <div class="col-sm-12">
-        <input type="text" class="form-control" placeholder="请输入身份证号" ng-model="entity.idcard">
-      </div>
 
-    </div>
   </form>
 </div>
 <div class="modal-footer">
@@ -41,7 +93,7 @@
     <alert data-ng-repeat="alert in alerts" type="{{alert.type}}">{{alert.msg}}</alert>
   </div>
   <div class="col-sm-12">
-    <button class="btn btn-primary btn-lg" ng-click="tryCreate()">新增雇员</button>
+    <button class="btn btn-primary btn-lg" ng-click="tryCreate()">新增交易</button>
     <button class="btn btn-warning btn-lg" ng-click="cancel()">取消</button>
   </div>
 </div>
