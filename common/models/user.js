@@ -9,8 +9,8 @@ module.exports = function(User) {
         next(err)
       } else {
         var now = Date.now()
-        user.created = now
-        user.lastUpdated = now
+        user.created = user.created||now
+        user.lastUpdated = user.lastUpdated||now
         user.status = 'active'
         next()
       }

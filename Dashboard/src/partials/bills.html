@@ -33,10 +33,10 @@
             <tr ng-repeat="entity in entities">
               <td>{{entity.id}}</td>
               <td>{{entity.billNumber}}</td>
-              <td>{{entity.amount}}</td>
-              <td>{{entity.discountAmount}}</td>
-              <td>{{entity.cashSettlement.amount}}</td>
-              <td>{{entity.memberSettlement.amount}}</td>
+              <td>{{entity.amount/100 | currency: '￥'}}</td>
+              <td>{{entity.discountAmount/100 | currency: '￥'}}</td>
+              <td>{{entity.cashSettlement.amount/100 | currency: '￥'}}</td>
+              <td>{{entity.memberSettlement.amount/100 | currency: '￥'}}</td>
               <td>{{entity.dealType | uppercase}}</td>
               <td class="text-center">{{entity.merchant.name}}</td>
               <td class="text-center">{{entity.shop.name}}</td>

@@ -706,6 +706,9 @@ var CreateDealModalInstanceCtrl = function ($scope, $modalInstance, $controller,
       "name": $scope.currentEmploye.name
     },
     serialNumber: Date.now(),
+    bill: {
+      billNumber: Date.now()
+    },
     quantity: 0,
     fee: 0,
     items:[]

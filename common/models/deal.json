@@ -6,7 +6,28 @@
       "collection": "deals"
     }
   },
-  "properties": {},
+  "properties": {
+    "shopID": {
+      "type": "string",
+      "required": true
+    },
+    "merchantID": {
+      "type": "string",
+      "required": true
+    },
+    "seller": {
+      "type": "object",
+      "required": true
+    },
+    "fee": {
+      "type": "number",
+      "required": true
+    },
+    "quantity": {
+      "type": "number",
+      "required": true
+    }
+  },
   "validations": [],
   "relations": {
     "merchant": {

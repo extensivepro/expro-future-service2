@@ -1,10 +1,10 @@
 module.exports = function(Item) {
   
-  Item.beforeCreate = function (next, member) {
+  Item.beforeCreate = function (next, item) {
     var now = Math.floor(Date.now()/1000)
-    member.createdAt = now
-    member.status = 'sale'
-    member.lastStatusModifiedAt = now
+    item.createdAt = item.createdAt||now
+    item.status = 'sale'
+    item.lastStatusModifiedAt = item.lastStatusModifiedAt||now
     next()
   }
   

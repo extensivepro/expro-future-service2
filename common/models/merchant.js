@@ -29,8 +29,8 @@ module.exports = function(Merchant) {
         next(err)
       } else {
         var now = Math.floor(Date.now()/1000)
-        merchant.createdAt = now
-        merchant.updateAt = now
+        merchant.createdAt = merchant.createdAt||now
+        merchant.updateAt = merchant.updateAt||now
         merchant.status = 'open'
         next()
       }

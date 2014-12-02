@@ -6,7 +6,7 @@ module.exports = function(Point) {
         next(err)
       } else {
         var now = Math.floor(Date.now()/1000)
-        point.createdAt = now
+        point.createdAt = point.createdAt||now
         point.merchantID = member.merchant.merchantID
         
         member.postPoint += point.point

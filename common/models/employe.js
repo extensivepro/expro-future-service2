@@ -18,8 +18,8 @@ module.exports = function(Employe) {
         next(err)
       } else {
         var now = Math.floor(Date.now()/1000)
-        employe.createdAt = now
-        employe.updateAt = now
+        employe.createdAt = employe.createdAt||now
+        employe.updateAt = employe.updateAt||now
         employe.status = 'active'
         next()
       }

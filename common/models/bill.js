@@ -2,7 +2,7 @@ module.exports = function(Bill) {
 
   Bill.beforeCreate = function (next, bill) {
     var now = Math.floor(Date.now()/1000)
-    bill.createdAt = now
+    bill.createdAt = bill.createdAt || now
     if(!bill.discountAmount) bill.discountAmount = 0
     next()
   }

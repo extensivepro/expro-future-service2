@@ -26,14 +26,14 @@ module.exports = function(Member) {
   
   Member.beforeCreate = function (next, member) {
     var now = Math.floor(Date.now()/1000)
-    member.createdAt = now
-    member.sinceAt = now
+    member.createdAt = member.createdAt||now
+    member.sinceAt = member.sinceAt||now
     member.dueAt = member.dueAt || now + 31536000
     member.level = member.level || 'VIP'
     member.postPoint = 0
     member.postTotalPoint = 0
     member.status = 'active'
-    member.updateAt = now
+    member.updateAt = member.updateAt||now
     next()
   }
   
