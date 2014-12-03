@@ -20,8 +20,10 @@
         <p class="form-control-static">{{entity.seller.name}}</p>
       </div>
       <label class="col-sm-2 control-label">顾客</label>
-      <div class="col-sm-4">
-        <p class="form-control-static">{{entity.memberSettlement | billOwner}}</p>
+      <div class="col-sm-4 input-group">
+        <a class="btn btn-success" ng-click="showMembers()">
+          {{memberSettlement | billOwner}} <i class="fa fa-angle-right"></i>
+        </a>
       </div>
     </div>
     
@@ -122,5 +124,27 @@
       <button class="btn btn-primary btn-lg" ng-click="confirm()">确定</button>
       <button class="btn btn-warning btn-lg" ng-click="cancel()">取消</button>
     </div>
+  </div>
+</script>
+
+<script id="member-list.html" type="text/ng-template">
+  <div class="modal-header">
+    <h3 class="modal-title text-center">选择会员</h3>
+  </div>
+  <div class="modal-body">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>会员名</th>
+          <th>手机</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr ng-repeat="entity in entities" ng-click="select(entity)" class="clcikable">
+          <td>{{entity.name}}</td>
+          <td>{{entity.phone}}</td>
+        </tr>
+      </tbody>
+    </table>
   </div>
 </script>

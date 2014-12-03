@@ -8,7 +8,7 @@ app.controller('DealsCtrl', function DealsCtrl($scope, Deal, $controller) {
   $scope.includes = ['merchant', 'shop', 'bill']
   $scope.createModalOption = {
     templateUrl: 'partials/deal-add.html',
-    controller: CreateDealModalInstanceCtrl
+    controller: 'CreateDealModalInstanceCtrl'
   }
   $scope.detailModalOption = {
     templateUrl: 'partials/deal-detail.html',
@@ -17,10 +17,10 @@ app.controller('DealsCtrl', function DealsCtrl($scope, Deal, $controller) {
   
 })
 
-var CreateDealModalInstanceCtrl = function ($scope, $modalInstance, $controller, Deal, $modal) {
+app.controller('CreateDealModalInstanceCtrl', function ($scope, $modalInstance, $controller, Deal, $modal) {
   $controller('CreateModalInstanceCtrl', {$scope: $scope, $modalInstance: $modalInstance})
   $scope.resource = Deal
-
+  
   var now = Date.now()
   $scope.entity = {
     merchantID: $scope.currentEmploye.merchant.id,
@@ -58,6 +58,19 @@ var CreateDealModalInstanceCtrl = function ($scope, $modalInstance, $controller,
     amount: 0,
     settledAt: now,
     payType: 'perpay'
+  }
+  
+  $scope.showMembers = function () {
+    var modalInstance = $modal.open({
+      templateUrl: 'member-list.html',
+      controller: 'ShowMembersModalInstanceCtrl'
+    })
+
+    modalInstance.result.then(function (selectedMember) {
+      $scope.memberSettlement.payerAccount = selectedMember.account
+    }, function () {
+      console.info('Modal dismissed at: ' + new Date())
+    })
   }
   
   $scope.showItems = function () {
@@ -110,7 +123,26 @@ var CreateDealModalInstanceCtrl = function ($scope, $modalInstance, $controller,
       $scope.alerts.push({type: 'danger', msg: '创建失败'})
     })
   }
-}
+})
+
+app.controller('ShowMembersModalInstanceCtrl', function ($scope, $modalInstance, Member) {
+  $scope.entities = []
+
+  $scope.select = function (entity) {
+    $modalInstance.close(entity)
+  }
+  
+  Member.find({filter:{
+    where:{
+      "merchant.merchantID": $scope.currentEmploye.merchantID
+    },
+    limit: 20
+  }}, function (entities) {
+    $scope.entities = entities
+  }, function (res) {
+    console.log('Can not found item', res)
+  })
+})
 
 var ShowItemsModalInstanceCtrl = function ($scope, $modalInstance, Item) {
   $scope.entities = []
