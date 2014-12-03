@@ -34,7 +34,7 @@
               <td>{{entity.name}}</td>
               <td>{{entity.code}}</td>
               <td>{{entity.mnemonicCode}}</td>
-              <td>{{entity.price}}</td>
+              <td>{{entity.price/100 | currency: '￥'}}</td>
               <td>{{entity.status | uppercase}}</td>
               <td class="text-center">{{entity.merchant.name}}</td>
               <td>{{entity.reason}}</td>

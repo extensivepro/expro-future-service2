@@ -697,6 +697,7 @@ var CreateDealModalInstanceCtrl = function ($scope, $modalInstance, $controller,
   $controller('CreateModalInstanceCtrl', {$scope: $scope, $modalInstance: $modalInstance})
   $scope.resource = Deal
 
+  var now = Date.now()
   $scope.entity = {
     merchantID: $scope.currentEmploye.merchant.id,
     shopID: $scope.currentEmploye.shopID,
@@ -705,13 +706,34 @@ var CreateDealModalInstanceCtrl = function ($scope, $modalInstance, $controller,
       jobNumber: $scope.currentEmploye.jobNumber,
       "name": $scope.currentEmploye.name
     },
-    serialNumber: Date.now(),
-    bill: {
-      billNumber: Date.now()
-    },
+    serialNumber: now,
     quantity: 0,
     fee: 0,
-    items:[]
+    items: [],
+    bill: {
+      amount: 0,
+      billNumber: now,
+      shopID: $scope.currentEmploye.shopID,
+      merchantID: $scope.currentEmploye.merchantID,
+      agentID: $scope.currentUser.employeID,
+      dealType: 'deal'
+    }
+  }
+  
+  $scope.cashSettlement = {
+    "status": 'closed',
+    serialNumber: now,
+    amount: 0,
+    settledAt: now,
+    payType: 'cash'
+  }
+  
+  $scope.memberSettlement = {
+    "status": 'closed',
+    serialNumber: now,
+    amount: 0,
+    settledAt: now,
+    payType: 'perpay'
   }
   
   $scope.showItems = function () {
@@ -747,6 +769,21 @@ var CreateDealModalInstanceCtrl = function ($scope, $modalInstance, $controller,
       })
     }, function () {
       console.info('Modal dismissed at: ' + new Date())
+    })
+  }
+
+  var settle = function (settlement) {
+    return settlement && settlement.amount > 0 ? settlement : null
+  }
+  $scope.tryCreate = function () {
+    $scope.alerts = []
+    $scope.entity.bill.amount = $scope.entity.fee
+    $scope.entity.bill.cashSettlement = settle($scope.cashSettlement)
+    $scope.entity.bill.memberSettlement = settle($scope.memberSettlement)
+    $scope.resource.create($scope.entity, function (entity) {
+      $modalInstance.close(entity)
+    }, function (res) {
+      $scope.alerts.push({type: 'danger', msg: '创建失败'})
     })
   }
 }
