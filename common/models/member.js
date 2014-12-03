@@ -10,7 +10,7 @@ module.exports = function(Member) {
           next(error)
         } else {
           ctx.req.body.merchant = {
-            merchantID: employe.merchantID,
+            merchantID: employe.merchantID.toString(),
             "name": employe.merchant().name,
             fullName: employe.merchant().fullName
           }
@@ -39,8 +39,10 @@ module.exports = function(Member) {
   
   Member.afterCreate = function (next) {
     var member = this
-    Member.app.models.Account.create({ownerID:member.id, "name": member.name}, function (error, account) {
+    Member.app.models.Account.create({ownerID:member.id.toString(), "name": member.name}, function (error, account) {
+      if(error) return next(error)
       member.account = account
+      member.account.id = account.id.toString()
       member.save()
       next()
     })

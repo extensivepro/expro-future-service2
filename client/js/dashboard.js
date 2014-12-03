@@ -791,6 +791,9 @@ app.controller('CreateDealModalInstanceCtrl', function ($scope, $modalInstance, 
   $scope.tryCreate = function () {
     $scope.alerts = []
     $scope.entity.bill.amount = $scope.entity.fee
+    if($scope.cashSettlement.amount + $scope.memberSettlement.amount < $scope.entity.fee) {
+      return $scope.alerts.push({type: 'danger', msg: '支付金额不足'})
+    }
     $scope.entity.bill.cashSettlement = settle($scope.cashSettlement)
     $scope.entity.bill.memberSettlement = settle($scope.memberSettlement)
     $scope.resource.create($scope.entity, function (entity) {

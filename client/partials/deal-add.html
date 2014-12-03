@@ -114,7 +114,7 @@
       <tbody>
         <tr ng-repeat="entity in entities" ng-class="{'success': entity.isChecked}" ng-click="entity.isChecked = !entity.isChecked" class="clcikable">
           <td>{{entity.name}}</td>
-          <td>{{entity.price}}</td>
+          <td>{{entity.price/100 | currency: '￥'}}</td>
         </tr>
       </tbody>
     </table>

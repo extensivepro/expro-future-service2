@@ -50,7 +50,7 @@
       "type": "number"
     },
     "account": {
-      "type": "account"
+      "type": "object"
     },
     "merchantID": {
       "type": "string",

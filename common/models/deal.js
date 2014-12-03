@@ -9,7 +9,7 @@ module.exports = function(Deal) {
     }
     Deal.app.models.Bill.create(bill, function (error, bill) {
       if(error) return next(error)
-      ctx.req.body.billID = bill.id
+      ctx.req.body.billID = bill.id.toString()
       next()
     })
   })
@@ -22,7 +22,7 @@ module.exports = function(Deal) {
   }
   
   Deal.afterCreate = function (next) {
-    Deal.app.models.Bill.update({id: this.billID}, {dealID: this.id}, function (error, count) {
+    Deal.app.models.Bill.update({id: this.billID}, {dealID: this.id.toString()}, function (error, count) {
       next(error)
     })
   }
