@@ -76,7 +76,7 @@ app.controller('CreateDealModalInstanceCtrl', function ($scope, $modalInstance, 
   $scope.showItems = function () {
     var modalInstance = $modal.open({
       templateUrl: 'deal-add-item-list.html',
-      controller: ShowItemsModalInstanceCtrl
+      controller: 'ShowItemsModalInstanceCtrl'
     })
 
     modalInstance.result.then(function (selectedItems) {
@@ -147,7 +147,7 @@ app.controller('ShowMembersModalInstanceCtrl', function ($scope, $modalInstance,
   })
 })
 
-var ShowItemsModalInstanceCtrl = function ($scope, $modalInstance, Item) {
+app.controller('ShowItemsModalInstanceCtrl', function ($scope, $modalInstance, Item) {
   $scope.entities = []
   
   $scope.confirm = function () {
@@ -170,9 +170,9 @@ var ShowItemsModalInstanceCtrl = function ($scope, $modalInstance, Item) {
   }, function (res) {
     console.log('Can not found item', res)
   })
-}
+})
 
-var DealDetailModalInstanceCtrl = function ($scope, $modalInstance, entity, Point, Bill) {
+var DealDetailModalInstanceCtrl = function ($scope, $modalInstance, entity) {
   
   $scope.entity = entity
   
