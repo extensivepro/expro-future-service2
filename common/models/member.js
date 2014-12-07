@@ -18,7 +18,7 @@ module.exports = function(Member) {
         }
       })
     } else {
-      var error = new Error('unauthorized, must be logged in to create merchant')
+      var error = new Error('unauthorized, must be logged in to create member')
       error.status = 401
       next(error)
     }
