@@ -1,19 +1,13 @@
 module.exports = function(Bill) {
 
 	Bill.beforeRemote('**', function (ctx, bill, next) {
-		console.log(ctx.methodString, 'was invoked remotely')
-		console.log(ctx.args,'=====')
-		if(ctx.req.accessToken) {
-      Bill.app.models.User.findOne({where:{id:ctx.req.accessToken.userId}, include:{employe:'merchant'}}, function (err, user) {
-        var employe = user.employe();
-				ctx.args.filter = ctx.args.filter || '{}'
-				var filter = JSON.parse(ctx.args.filter)
-				console.log(ctx.args)
-				filter.where = {merchantID: employe.merchantID}
-				ctx.args.filter = JSON.stringify(filter)
-				console.log(ctx.args)
-				next()
-			})
+		// console.log(ctx.methodString, 'was invoked remotely')
+		if(ctx.req.employe) {
+			ctx.args.filter = ctx.args.filter || '{}'
+			var filter = JSON.parse(ctx.args.filter)
+			filter.where = {merchantID: ctx.req.employe.merchantID}
+			ctx.args.filter = JSON.stringify(filter)
+			next()
 		} else {
       var error = new Error('unauthorized, unkonwn employe.')
       error.status = 401
