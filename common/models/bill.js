@@ -1,19 +1,4 @@
 module.exports = function(Bill) {
-
-	Bill.beforeRemote('**', function (ctx, bill, next) {
-		// console.log(ctx.methodString, 'was invoked remotely')
-		if(ctx.req.employe) {
-			ctx.args.filter = ctx.args.filter || '{}'
-			var filter = JSON.parse(ctx.args.filter)
-			filter.where = {merchantID: ctx.req.employe.merchantID}
-			ctx.args.filter = JSON.stringify(filter)
-			next()
-		} else {
-      var error = new Error('unauthorized, unkonwn employe.')
-      error.status = 401
-			next(error)
-		}
-	})
 	
   Bill.beforeCreate = function (next, bill) {
     var now = Math.floor(Date.now()/1000)

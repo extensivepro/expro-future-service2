@@ -1,24 +1,22 @@
 module.exports = function(Member) {
-  
+	
   Member.beforeRemote('create', function (ctx, unused, next) {
-    if (ctx.req.accessToken) {
-      Member.app.models.User.findOne({where:{id:ctx.req.accessToken.userId}, include:{employe:'merchant'}}, function (err, user) {
-        var employe = user.employe()
-        if (employe.merchantID != ctx.req.body.merchantID) {
-          var error = new Error('forbidden, should not add member of other merchant')
-          error.status = 403
-          next(error)
-        } else {
-          ctx.req.body.merchant = {
-            merchantID: employe.merchantID.toString(),
-            "name": employe.merchant().name,
-            fullName: employe.merchant().fullName
-          }
-          next()
+    if (ctx.req.employe) {
+      var employe = ctx.req.employe
+      if (employe.merchantID != ctx.req.body.merchantID) {
+        var error = new Error('forbidden, should not add member of other merchant')
+        error.status = 403
+        next(error)
+      } else {
+        ctx.req.body.merchant = {
+          merchantID: employe.merchantID.toString(),
+          "name": employe.merchant().name,
+          fullName: employe.merchant().fullName
         }
-      })
+        next()
+      }
     } else {
-      var error = new Error('unauthorized, must be logged in to create member')
+      var error = new Error('unauthorized, unkonwn employe')
       error.status = 401
       next(error)
     }
