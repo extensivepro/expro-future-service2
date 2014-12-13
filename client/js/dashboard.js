@@ -3,7 +3,162 @@
 
 /* Services */
 
-angular.module('expro-future2.services', ['lbServices'])  
+angular.module('expro-future2.services', ['lbServices'])
+
+.factory('CurrentEmploye', function (Employe, $rootScope) {
+  var _currentEmploye = undefined
+  var _currentUser = undefined
+  
+  return {
+    currentEmploye: function () {
+      return _currentEmploye
+    },
+    
+    setCurrentEmploye: function (user) {
+      $rootScope.currentUser = user
+      _currentUser = user
+      if(user.employeID) {
+        Employe.findOne({
+          filter:{
+            where:{id:user.employeID}, 
+            include:['merchant', 'shop']
+          }
+        }, function (employe) {
+          _currentEmploye = employe
+          $rootScope.currentEmploye = employe
+        }, function (res) {
+          console.log('Find employe error')
+        })
+      }
+    }
+    
+  }
+})
+
+.factory('DealTransaction', function (CurrentEmploye, Deal) {
+  var _deal = undefined
+  
+  var registerItem = function (item) {
+    var exited = _deal.items.some(function (dealItem) {
+      if(item.id === dealItem.item.id) {
+        dealItem.quantity += 1
+        _deal.quantity += 1
+        _deal.fee += dealItem.dealPrice 
+        return true
+      } else {
+        return false
+      }
+    })
+    if(exited) return
+    _deal.items.push({
+      item: {
+        id: item.id,
+        "name": item.name,
+        price: item.price
+      },
+      dealPrice: item.price,
+      quantity: 1
+    })        
+    _deal.quantity += 1
+    _deal.fee += item.price 
+  }
+  
+  var DT = {
+    "open": function () {
+      var now = Date.now()
+      var employe = CurrentEmploye.currentEmploye()
+      _deal = {
+        merchantID: employe.merchant.id,
+        shopID: employe.shopID,
+        seller: {
+          employeID: employe.id,
+          jobNumber: employe.jobNumber,
+          "name": employe.name
+        },
+        serialNumber: now,
+        quantity: 0,
+        fee: 0,
+        items: [],
+        bill: {
+          amount: 0,
+          billNumber: now,
+          shopID: employe.shopID,
+          merchantID: employe.merchantID,
+          agentID: employe.id,
+          dealType: 'deal',
+          cashSettlement: {
+            "status": 'closed',
+            serialNumber: now,
+            amount: 0,
+            settledAt: now,
+            payType: 'cash'
+          }
+        }
+      }
+      
+      return _deal
+    },
+    
+    setMember: function (member) {
+      if(!member) {
+        _deal.bill.memberSettlement = null
+        _deal.buyer = null
+      } else {
+        var now = Date.now()
+
+        _deal.buyer = {
+          "name": member.name,
+          code: member.code,
+          memberID: member.id
+        }
+        
+        _deal.bill.memberSettlement = {
+          "status": 'closed',
+          serialNumber: now,
+          amount: 0,
+          settledAt: now,
+          payType: 'perpay',
+          payerAccount: member.account
+        }
+      }
+    },
+    
+    registerItem: registerItem,
+    
+    registerItems: function (items) {
+      items.forEach(registerItem)
+    },
+    
+    settle: function (successCb, errorCb) {
+      
+      var validateSettlement = function (settlement) {
+        return settlement && settlement.amount > 0 ? settlement : null
+      }
+      
+      _deal.bill.amount = _deal.fee
+      _deal.bill.cashSettlement = validateSettlement(_deal.bill.cashSettlement)
+      _deal.bill.memberSettlement = validateSettlement(_deal.bill.memberSettlement)
+
+      var paidAmount = 0
+      if(_deal.bill.cashSettlement) {
+        paidAmount += _deal.bill.cashSettlement.amount
+      }
+      if(_deal.bill.memberSettlement) {
+        paidAmount += _deal.bill.memberSettlement.amount
+      }
+      if(paidAmount < _deal.bill.amount - _deal.bill.discountAmount) {
+        return errorCb(null, {type: 'danger', msg: '支付金额不足'})
+      }
+      
+      
+      Deal.create(_deal, successCb, function (res) {
+        errorCb(res, {type: 'danger', msg: '创建失败'})
+      })
+    }
+  }
+  
+  return DT
+})
 var app = angular.module('Dashboard', ['ui.utils', 'ui.bootstrap', 'ui.router', 'ngCookies', 'ngMorph', 'mgo-angular-wizard', 'expro-future2.services'])
 .config(['$httpProvider', function($httpProvider) {
 	$httpProvider.defaults.withCredentials = true
@@ -77,30 +232,13 @@ app.config(function($stateProvider, $urlRouterProvider, USER_ROLES) {
  * Global Level variable and function
  */
 
-app.controller('ApplicationCtrl', function ($scope, $rootScope, $modal, User, Employe) {
-  
-  var setCurrentUser = function (user) {
-    $rootScope.currentUser = user
-    if(user.employeID) {
-      Employe.findOne({
-        filter:{
-          where:{id:user.employeID}, 
-          include:['merchant', 'shop']
-        }
-      }, function (employe) {
-        $rootScope.currentEmploye = employe
-      }, function (res) {
-        console.log('Find employe error')
-      })
-    }
-  }
+app.controller('ApplicationCtrl', function ($scope, $rootScope, $modal, User, CurrentEmploye) {
   
   $rootScope.$on('AUTH_LOGIN', function(e, user) {
-    setCurrentUser(user.user)
+    CurrentEmploye.setCurrentEmploye(user.user)
   });
 
   $rootScope.$on('AUTH_LOGOUT', function (d, data) {
-    $rootScope.currentUser = {name:"未登录"}
     login()
   })
   
@@ -125,9 +263,7 @@ app.controller('ApplicationCtrl', function ($scope, $rootScope, $modal, User, Em
     })
   }
 
-  User.getCurrent(function (user) {
-    setCurrentUser(user)
-  }, function () {
+  User.getCurrent(CurrentEmploye.setCurrentEmploye, function () {
     $rootScope.$broadcast('AUTH_LOGOUT')
   })
   
@@ -693,48 +829,12 @@ app.controller('DealsCtrl', function DealsCtrl($scope, Deal, $controller) {
   
 })
 
-app.controller('CreateDealModalInstanceCtrl', function ($scope, $modalInstance, $controller, Deal, $modal) {
+app.controller('CreateDealModalInstanceCtrl', 
+function ($scope, $modalInstance, $controller, Deal, $modal, DealTransaction, User) {
   $controller('CreateModalInstanceCtrl', {$scope: $scope, $modalInstance: $modalInstance})
   $scope.resource = Deal
   
-  var now = Date.now()
-  $scope.entity = {
-    merchantID: $scope.currentEmploye.merchant.id,
-    shopID: $scope.currentEmploye.shopID,
-    seller: {
-      employeID: $scope.currentEmploye.id,
-      jobNumber: $scope.currentEmploye.jobNumber,
-      "name": $scope.currentEmploye.name
-    },
-    serialNumber: now,
-    quantity: 0,
-    fee: 0,
-    items: [],
-    bill: {
-      amount: 0,
-      billNumber: now,
-      shopID: $scope.currentEmploye.shopID,
-      merchantID: $scope.currentEmploye.merchantID,
-      agentID: $scope.currentUser.employeID,
-      dealType: 'deal'
-    }
-  }
-  
-  $scope.cashSettlement = {
-    "status": 'closed',
-    serialNumber: now,
-    amount: 0,
-    settledAt: now,
-    payType: 'cash'
-  }
-  
-  $scope.memberSettlement = {
-    "status": 'closed',
-    serialNumber: now,
-    amount: 0,
-    settledAt: now,
-    payType: 'perpay'
-  }
+  $scope.entity = DealTransaction.open()  
   
   $scope.showMembers = function () {
     var modalInstance = $modal.open({
@@ -742,9 +842,7 @@ app.controller('CreateDealModalInstanceCtrl', function ($scope, $modalInstance, 
       controller: 'ShowMembersModalInstanceCtrl'
     })
 
-    modalInstance.result.then(function (selectedMember) {
-      $scope.memberSettlement.payerAccount = selectedMember.account
-    }, function () {
+    modalInstance.result.then(DealTransaction.setMember, function () {
       console.info('Modal dismissed at: ' + new Date())
     })
   }
@@ -755,56 +853,22 @@ app.controller('CreateDealModalInstanceCtrl', function ($scope, $modalInstance, 
       controller: 'ShowItemsModalInstanceCtrl'
     })
 
-    modalInstance.result.then(function (selectedItems) {
-      selectedItems.forEach(function (item) {
-        var exited = $scope.entity.items.some(function (dealItem) {
-          if(item.id === dealItem.item.id) {
-            dealItem.quantity += 1
-            $scope.entity.quantity += 1
-            $scope.entity.fee += dealItem.dealPrice 
-            return true
-          } else {
-            return false
-          }
-        })
-        if(exited) return
-        $scope.entity.items.push({
-          item: {
-            id: item.id,
-            "name": item.name,
-            price: item.price
-          },
-          dealPrice: item.price,
-          quantity: 1
-        })        
-        $scope.entity.quantity += 1
-        $scope.entity.fee += item.price 
-      })
-    }, function () {
+    modalInstance.result.then(DealTransaction.registerItems, function () {
       console.info('Modal dismissed at: ' + new Date())
     })
   }
 
-  var settle = function (settlement) {
-    return settlement && settlement.amount > 0 ? settlement : null
-  }
   $scope.tryCreate = function () {
     $scope.alerts = []
-    $scope.entity.bill.amount = $scope.entity.fee
-    if($scope.cashSettlement.amount + $scope.memberSettlement.amount < $scope.entity.fee) {
-      return $scope.alerts.push({type: 'danger', msg: '支付金额不足'})
-    }
-    $scope.entity.bill.cashSettlement = settle($scope.cashSettlement)
-    $scope.entity.bill.memberSettlement = settle($scope.memberSettlement)
-    $scope.resource.create($scope.entity, function (entity) {
+    DealTransaction.settle(function (entity) {
       $modalInstance.close(entity)
-    }, function (res) {
-      $scope.alerts.push({type: 'danger', msg: '创建失败'})
+    }, function (res, alertMsg) {
+      $scope.alerts.push(alertMsg)
     })
   }
 })
 
-app.controller('ShowMembersModalInstanceCtrl', function ($scope, $modalInstance, Member) {
+app.controller('ShowMembersModalInstanceCtrl', function ($scope, $modalInstance, Member, CurrentEmploye) {
   $scope.entities = []
 
   $scope.select = function (entity) {
@@ -813,7 +877,7 @@ app.controller('ShowMembersModalInstanceCtrl', function ($scope, $modalInstance,
   
   Member.find({filter:{
     where:{
-      "merchant.merchantID": $scope.currentEmploye.merchantID
+      "merchant.merchantID": CurrentEmploye.currentEmploye().merchantID
     },
     limit: 20
   }}, function (entities) {
@@ -823,7 +887,7 @@ app.controller('ShowMembersModalInstanceCtrl', function ($scope, $modalInstance,
   })
 })
 
-app.controller('ShowItemsModalInstanceCtrl', function ($scope, $modalInstance, Item) {
+app.controller('ShowItemsModalInstanceCtrl', function ($scope, $modalInstance, Item, CurrentEmploye) {
   $scope.entities = []
   
   $scope.confirm = function () {
@@ -838,7 +902,7 @@ app.controller('ShowItemsModalInstanceCtrl', function ($scope, $modalInstance, I
   
   Item.find({filter:{
     where:{
-      merchantID: $scope.currentEmploye.merchantID
+      merchantID: CurrentEmploye.currentEmploye().merchantID
     },
     limit: 20
   }}, function (items) {

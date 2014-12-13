@@ -3,30 +3,13 @@
  * Global Level variable and function
  */
 
-app.controller('ApplicationCtrl', function ($scope, $rootScope, $modal, User, Employe) {
-  
-  var setCurrentUser = function (user) {
-    $rootScope.currentUser = user
-    if(user.employeID) {
-      Employe.findOne({
-        filter:{
-          where:{id:user.employeID}, 
-          include:['merchant', 'shop']
-        }
-      }, function (employe) {
-        $rootScope.currentEmploye = employe
-      }, function (res) {
-        console.log('Find employe error')
-      })
-    }
-  }
+app.controller('ApplicationCtrl', function ($scope, $rootScope, $modal, User, CurrentEmploye) {
   
   $rootScope.$on('AUTH_LOGIN', function(e, user) {
-    setCurrentUser(user.user)
+    CurrentEmploye.setCurrentEmploye(user.user)
   });
 
   $rootScope.$on('AUTH_LOGOUT', function (d, data) {
-    $rootScope.currentUser = {name:"未登录"}
     login()
   })
   
@@ -51,9 +34,7 @@ app.controller('ApplicationCtrl', function ($scope, $rootScope, $modal, User, Em
     })
   }
 
-  User.getCurrent(function (user) {
-    setCurrentUser(user)
-  }, function () {
+  User.getCurrent(CurrentEmploye.setCurrentEmploye, function () {
     $rootScope.$broadcast('AUTH_LOGOUT')
   })
   
