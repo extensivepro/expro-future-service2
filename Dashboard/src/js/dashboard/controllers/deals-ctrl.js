@@ -18,11 +18,12 @@ app.controller('DealsCtrl', function DealsCtrl($scope, Deal, $controller) {
 })
 
 app.controller('CreateDealModalInstanceCtrl', 
-function ($scope, $modalInstance, $controller, Deal, $modal, DealTransaction, User) {
+function ($scope, $modalInstance, $controller, Deal, $modal, DealTransaction, User, CurrentEmploye) {
   $controller('CreateModalInstanceCtrl', {$scope: $scope, $modalInstance: $modalInstance})
   $scope.resource = Deal
+  $scope.currentEmploye = CurrentEmploye
   
-  $scope.entity = DealTransaction.open()  
+  $scope.entity = DealTransaction  
   
   $scope.showMembers = function () {
     var modalInstance = $modal.open({
@@ -30,7 +31,9 @@ function ($scope, $modalInstance, $controller, Deal, $modal, DealTransaction, Us
       controller: 'ShowMembersModalInstanceCtrl'
     })
 
-    modalInstance.result.then(DealTransaction.setMember, function () {
+    modalInstance.result.then(function (member) {
+      DealTransaction.setMember(member)
+    }, function () {
       console.info('Modal dismissed at: ' + new Date())
     })
   }
@@ -41,7 +44,9 @@ function ($scope, $modalInstance, $controller, Deal, $modal, DealTransaction, Us
       controller: 'ShowItemsModalInstanceCtrl'
     })
 
-    modalInstance.result.then(DealTransaction.registerItems, function () {
+    modalInstance.result.then(function (items) {
+      DealTransaction.registerItems(items)
+    }, function () {
       console.info('Modal dismissed at: ' + new Date())
     })
   }
@@ -63,12 +68,7 @@ app.controller('ShowMembersModalInstanceCtrl', function ($scope, $modalInstance,
     $modalInstance.close(entity)
   }
   
-  Member.find({filter:{
-    where:{
-      "merchant.merchantID": CurrentEmploye.currentEmploye().merchantID
-    },
-    limit: 20
-  }}, function (entities) {
+  Member.find(function (entities) {
     $scope.entities = entities
   }, function (res) {
     console.log('Can not found item', res)
@@ -90,7 +90,7 @@ app.controller('ShowItemsModalInstanceCtrl', function ($scope, $modalInstance, I
   
   Item.find({filter:{
     where:{
-      merchantID: CurrentEmploye.currentEmploye().merchantID
+      merchantID: CurrentEmploye.merchantID
     },
     limit: 20
   }}, function (items) {

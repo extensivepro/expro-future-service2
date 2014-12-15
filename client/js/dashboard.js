@@ -3,162 +3,7 @@
 
 /* Services */
 
-angular.module('expro-future2.services', ['lbServices'])
-
-.factory('CurrentEmploye', function (Employe, $rootScope) {
-  var _currentEmploye = undefined
-  var _currentUser = undefined
-  
-  return {
-    currentEmploye: function () {
-      return _currentEmploye
-    },
-    
-    setCurrentEmploye: function (user) {
-      $rootScope.currentUser = user
-      _currentUser = user
-      if(user.employeID) {
-        Employe.findOne({
-          filter:{
-            where:{id:user.employeID}, 
-            include:['merchant', 'shop']
-          }
-        }, function (employe) {
-          _currentEmploye = employe
-          $rootScope.currentEmploye = employe
-        }, function (res) {
-          console.log('Find employe error')
-        })
-      }
-    }
-    
-  }
-})
-
-.factory('DealTransaction', function (CurrentEmploye, Deal) {
-  var _deal = undefined
-  
-  var registerItem = function (item) {
-    var exited = _deal.items.some(function (dealItem) {
-      if(item.id === dealItem.item.id) {
-        dealItem.quantity += 1
-        _deal.quantity += 1
-        _deal.fee += dealItem.dealPrice 
-        return true
-      } else {
-        return false
-      }
-    })
-    if(exited) return
-    _deal.items.push({
-      item: {
-        id: item.id,
-        "name": item.name,
-        price: item.price
-      },
-      dealPrice: item.price,
-      quantity: 1
-    })        
-    _deal.quantity += 1
-    _deal.fee += item.price 
-  }
-  
-  var DT = {
-    "open": function () {
-      var now = Date.now()
-      var employe = CurrentEmploye.currentEmploye()
-      _deal = {
-        merchantID: employe.merchant.id,
-        shopID: employe.shopID,
-        seller: {
-          employeID: employe.id,
-          jobNumber: employe.jobNumber,
-          "name": employe.name
-        },
-        serialNumber: now,
-        quantity: 0,
-        fee: 0,
-        items: [],
-        bill: {
-          amount: 0,
-          billNumber: now,
-          shopID: employe.shopID,
-          merchantID: employe.merchantID,
-          agentID: employe.id,
-          dealType: 'deal',
-          cashSettlement: {
-            "status": 'closed',
-            serialNumber: now,
-            amount: 0,
-            settledAt: now,
-            payType: 'cash'
-          }
-        }
-      }
-      
-      return _deal
-    },
-    
-    setMember: function (member) {
-      if(!member) {
-        _deal.bill.memberSettlement = null
-        _deal.buyer = null
-      } else {
-        var now = Date.now()
-
-        _deal.buyer = {
-          "name": member.name,
-          code: member.code,
-          memberID: member.id
-        }
-        
-        _deal.bill.memberSettlement = {
-          "status": 'closed',
-          serialNumber: now,
-          amount: 0,
-          settledAt: now,
-          payType: 'perpay',
-          payerAccount: member.account
-        }
-      }
-    },
-    
-    registerItem: registerItem,
-    
-    registerItems: function (items) {
-      items.forEach(registerItem)
-    },
-    
-    settle: function (successCb, errorCb) {
-      
-      var validateSettlement = function (settlement) {
-        return settlement && settlement.amount > 0 ? settlement : null
-      }
-      
-      _deal.bill.amount = _deal.fee
-      _deal.bill.cashSettlement = validateSettlement(_deal.bill.cashSettlement)
-      _deal.bill.memberSettlement = validateSettlement(_deal.bill.memberSettlement)
-
-      var paidAmount = 0
-      if(_deal.bill.cashSettlement) {
-        paidAmount += _deal.bill.cashSettlement.amount
-      }
-      if(_deal.bill.memberSettlement) {
-        paidAmount += _deal.bill.memberSettlement.amount
-      }
-      if(paidAmount < _deal.bill.amount - _deal.bill.discountAmount) {
-        return errorCb(null, {type: 'danger', msg: '支付金额不足'})
-      }
-      
-      
-      Deal.create(_deal, successCb, function (res) {
-        errorCb(res, {type: 'danger', msg: '创建失败'})
-      })
-    }
-  }
-  
-  return DT
-})
+angular.module('expro-future2.services', ['ef-services2'])
 var app = angular.module('Dashboard', ['ui.utils', 'ui.bootstrap', 'ui.router', 'ngCookies', 'ngMorph', 'mgo-angular-wizard', 'expro-future2.services'])
 .config(['$httpProvider', function($httpProvider) {
 	$httpProvider.defaults.withCredentials = true
@@ -217,10 +62,6 @@ app.config(function($stateProvider, $urlRouterProvider, USER_ROLES) {
       url: '/bills',
       templateUrl: 'partials/bills.html'
     })
-    .state('accounts', {
-      url: '/accounts',
-      templateUrl: 'partials/accounts.html'
-    })
     .state('deals', {
       url: '/deals',
       templateUrl: 'partials/deals.html'
@@ -233,12 +74,15 @@ app.config(function($stateProvider, $urlRouterProvider, USER_ROLES) {
  */
 
 app.controller('ApplicationCtrl', function ($scope, $rootScope, $modal, User, CurrentEmploye) {
-  
+    
   $rootScope.$on('AUTH_LOGIN', function(e, user) {
-    CurrentEmploye.setCurrentEmploye(user.user)
+    CurrentEmploye.setEmploye(user.user)
+    $scope.currentUser = user.user
   });
 
   $rootScope.$on('AUTH_LOGOUT', function (d, data) {
+    CurrentEmploye.clearEmploye()
+    $scope.currentUser = null
     login()
   })
   
@@ -263,7 +107,10 @@ app.controller('ApplicationCtrl', function ($scope, $rootScope, $modal, User, Cu
     })
   }
 
-  User.getCurrent(CurrentEmploye.setCurrentEmploye, function () {
+  User.getCurrent(function (user) {
+    CurrentEmploye.setEmploye(user)
+    $scope.currentUser = user
+  }, function () {
     $rootScope.$broadcast('AUTH_LOGOUT')
   })
   
@@ -335,7 +182,7 @@ var ProfileModalInstanceCtrl = function ($scope, $modalInstance, $rootScope, Use
   
 }
 
-var ResetPasswordModalInstanceCtrl = function ($scope, $modalInstance, $rootScope, User) {
+var ResetPasswordModalInstanceCtrl = function ($scope, $modalInstance, User) {
   $scope.credentials = {}
   
   $scope.resetPassword = function (credentials) {
@@ -346,7 +193,7 @@ var ResetPasswordModalInstanceCtrl = function ($scope, $modalInstance, $rootScop
     }
     
     User.upsert({
-      id: $scope.currentUser.id,
+      id: User.getCurrentId(),
       password: credentials.password
     }, function (user) {
       $modalInstance.close()
@@ -532,12 +379,13 @@ app.controller('MembersCtrl', function MembersCtrl($scope, Member, $controller, 
   
 })
 
-var CreateMemberModalInstanceCtrl = function ($scope, $modalInstance, $controller, Member) {
+var CreateMemberModalInstanceCtrl = function ($scope, $modalInstance, $controller, Member, CurrentEmploye) {
   $controller('CreateModalInstanceCtrl', {$scope: $scope, $modalInstance: $modalInstance})
   $scope.resource = Member
+  $scope.currentEmploye = CurrentEmploye
 
   $scope.entity = {
-    merchantID: $scope.currentEmploye.merchant.id
+    merchantID: CurrentEmploye.merchantID
   }
   
   $scope.blurCb = function (evt) {
@@ -545,7 +393,7 @@ var CreateMemberModalInstanceCtrl = function ($scope, $modalInstance, $controlle
   }  
 }
 
-var MemberDetailModalInstanceCtrl = function ($scope, $modalInstance, $rootScope, entity, Point, Bill) {
+var MemberDetailModalInstanceCtrl = function ($scope, $modalInstance, CurrentEmploye, entity, Point, Bill) {
   
   $scope.entity = entity
   
@@ -577,7 +425,7 @@ var MemberDetailModalInstanceCtrl = function ($scope, $modalInstance, $rootScope
     Point.create({
       point: point,
       memberID: entity.id,
-      agentID: $scope.currentUser.employeID,
+      agentID: CurrentEmploye.id,
       reason: reason
     }, function (point) {
       entity.postPoint = point.postPoint
@@ -602,9 +450,9 @@ var MemberDetailModalInstanceCtrl = function ($scope, $modalInstance, $rootScope
       dealType: dealType,
       amount: amount,
       billNumber: now,
-      shopID: $scope.currentEmploye.shopID,
-      merchantID: $scope.currentEmploye.merchantID,
-      agentID: $scope.currentUser.employeID,
+      shopID: CurrentEmploye.shopID,
+      merchantID: CurrentEmploye.merchantID,
+      agentID: CurrentEmploye.id,
       cashSettlement: {
         "status": 'closed',
         serialNumber: now,
@@ -670,19 +518,17 @@ app.controller('MerchantsCtrl', function MerchantsCtrl($scope, Merchant, $contro
   
 })
 
-var CreateMerchantModalInstanceCtrl = function ($scope, $modalInstance, $rootScope, Merchant) {
+var CreateMerchantModalInstanceCtrl = function ($scope, $modalInstance, CurrentEmploye, User, Merchant) {
 
   var now = Date.now()
   $scope.entity = {
-    ownerID: $scope.currentUser.id,
-    masterPhone: $scope.currentUser.username,
-    telephone: $scope.currentUser.username,
+    ownerID: User.getCurrentId(),
+    masterPhone: User.getCachedCurrent().username,
+    telephone: User.getCachedCurrent().username,
     fullName: "泛盈信息科技有限公司"+now,
     "name": "泛盈科技"+now
   }
-  
-  console.log($scope.currentUser)
-  
+    
   $scope.alerts = []
 	
   $scope.tryCreate = function () {
@@ -725,13 +571,14 @@ app.controller('EmployesCtrl', function EmployesCtrl($scope, Employe, $controlle
   
 })
 
-var CreateEmployeModalInstanceCtrl = function ($scope, Employe, $controller, $modalInstance) {
+var CreateEmployeModalInstanceCtrl = function ($scope, Employe, $controller, $modalInstance, CurrentEmploye) {
   $controller('CreateModalInstanceCtrl', {$scope: $scope, $modalInstance: $modalInstance})
   $scope.resource = Employe
+  $scope.currentEmploye = CurrentEmploye
 
   $scope.entity = {
-    merchantID: $scope.currentEmploye.merchant.id,
-    shopID: $scope.currentEmploye.shopID
+    merchantID: CurrentEmploye.merchantID,
+    shopID: CurrentEmploye.shopID
   }
 }
 /**
@@ -769,10 +616,12 @@ app.controller('ItemsCtrl', function ItemsCtrl($scope, Item, $controller, $modal
   }
 })
 
-var CreateItemModalInstanceCtrl = function ($scope, $modalInstance, $rootScope, Item) {
+var CreateItemModalInstanceCtrl = function ($scope, $modalInstance, CurrentEmploye, Item) {
+
+  $scope.currentEmploye = CurrentEmploye
 
   $scope.entity = {
-    merchantID: $scope.currentEmploye.merchant.id,
+    merchantID: CurrentEmploye.merchantID,
     name: "化妆品"+Date.now(),
     code: "1234567890",
     price: 900
@@ -830,11 +679,12 @@ app.controller('DealsCtrl', function DealsCtrl($scope, Deal, $controller) {
 })
 
 app.controller('CreateDealModalInstanceCtrl', 
-function ($scope, $modalInstance, $controller, Deal, $modal, DealTransaction, User) {
+function ($scope, $modalInstance, $controller, Deal, $modal, DealTransaction, User, CurrentEmploye) {
   $controller('CreateModalInstanceCtrl', {$scope: $scope, $modalInstance: $modalInstance})
   $scope.resource = Deal
+  $scope.currentEmploye = CurrentEmploye
   
-  $scope.entity = DealTransaction.open()  
+  $scope.entity = DealTransaction  
   
   $scope.showMembers = function () {
     var modalInstance = $modal.open({
@@ -842,7 +692,9 @@ function ($scope, $modalInstance, $controller, Deal, $modal, DealTransaction, Us
       controller: 'ShowMembersModalInstanceCtrl'
     })
 
-    modalInstance.result.then(DealTransaction.setMember, function () {
+    modalInstance.result.then(function (member) {
+      DealTransaction.setMember(member)
+    }, function () {
       console.info('Modal dismissed at: ' + new Date())
     })
   }
@@ -853,7 +705,9 @@ function ($scope, $modalInstance, $controller, Deal, $modal, DealTransaction, Us
       controller: 'ShowItemsModalInstanceCtrl'
     })
 
-    modalInstance.result.then(DealTransaction.registerItems, function () {
+    modalInstance.result.then(function (items) {
+      DealTransaction.registerItems(items)
+    }, function () {
       console.info('Modal dismissed at: ' + new Date())
     })
   }
@@ -875,12 +729,7 @@ app.controller('ShowMembersModalInstanceCtrl', function ($scope, $modalInstance,
     $modalInstance.close(entity)
   }
   
-  Member.find({filter:{
-    where:{
-      "merchant.merchantID": CurrentEmploye.currentEmploye().merchantID
-    },
-    limit: 20
-  }}, function (entities) {
+  Member.find(function (entities) {
     $scope.entities = entities
   }, function (res) {
     console.log('Can not found item', res)
@@ -902,7 +751,7 @@ app.controller('ShowItemsModalInstanceCtrl', function ($scope, $modalInstance, I
   
   Item.find({filter:{
     where:{
-      merchantID: CurrentEmploye.currentEmploye().merchantID
+      merchantID: CurrentEmploye.merchantID
     },
     limit: 20
   }}, function (items) {

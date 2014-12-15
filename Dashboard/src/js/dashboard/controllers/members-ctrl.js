@@ -16,12 +16,13 @@ app.controller('MembersCtrl', function MembersCtrl($scope, Member, $controller, 
   
 })
 
-var CreateMemberModalInstanceCtrl = function ($scope, $modalInstance, $controller, Member) {
+var CreateMemberModalInstanceCtrl = function ($scope, $modalInstance, $controller, Member, CurrentEmploye) {
   $controller('CreateModalInstanceCtrl', {$scope: $scope, $modalInstance: $modalInstance})
   $scope.resource = Member
+  $scope.currentEmploye = CurrentEmploye
 
   $scope.entity = {
-    merchantID: $scope.currentEmploye.merchant.id
+    merchantID: CurrentEmploye.merchantID
   }
   
   $scope.blurCb = function (evt) {
@@ -29,7 +30,7 @@ var CreateMemberModalInstanceCtrl = function ($scope, $modalInstance, $controlle
   }  
 }
 
-var MemberDetailModalInstanceCtrl = function ($scope, $modalInstance, $rootScope, entity, Point, Bill) {
+var MemberDetailModalInstanceCtrl = function ($scope, $modalInstance, CurrentEmploye, entity, Point, Bill) {
   
   $scope.entity = entity
   
@@ -61,7 +62,7 @@ var MemberDetailModalInstanceCtrl = function ($scope, $modalInstance, $rootScope
     Point.create({
       point: point,
       memberID: entity.id,
-      agentID: $scope.currentUser.employeID,
+      agentID: CurrentEmploye.id,
       reason: reason
     }, function (point) {
       entity.postPoint = point.postPoint
@@ -86,9 +87,9 @@ var MemberDetailModalInstanceCtrl = function ($scope, $modalInstance, $rootScope
       dealType: dealType,
       amount: amount,
       billNumber: now,
-      shopID: $scope.currentEmploye.shopID,
-      merchantID: $scope.currentEmploye.merchantID,
-      agentID: $scope.currentUser.employeID,
+      shopID: CurrentEmploye.shopID,
+      merchantID: CurrentEmploye.merchantID,
+      agentID: CurrentEmploye.id,
       cashSettlement: {
         "status": 'closed',
         serialNumber: now,

@@ -4,12 +4,15 @@
  */
 
 app.controller('ApplicationCtrl', function ($scope, $rootScope, $modal, User, CurrentEmploye) {
-  
+    
   $rootScope.$on('AUTH_LOGIN', function(e, user) {
-    CurrentEmploye.setCurrentEmploye(user.user)
+    CurrentEmploye.setEmploye(user.user)
+    $scope.currentUser = user.user
   });
 
   $rootScope.$on('AUTH_LOGOUT', function (d, data) {
+    CurrentEmploye.clearEmploye()
+    $scope.currentUser = null
     login()
   })
   
@@ -34,7 +37,10 @@ app.controller('ApplicationCtrl', function ($scope, $rootScope, $modal, User, Cu
     })
   }
 
-  User.getCurrent(CurrentEmploye.setCurrentEmploye, function () {
+  User.getCurrent(function (user) {
+    CurrentEmploye.setEmploye(user)
+    $scope.currentUser = user
+  }, function () {
     $rootScope.$broadcast('AUTH_LOGOUT')
   })
   
@@ -106,7 +112,7 @@ var ProfileModalInstanceCtrl = function ($scope, $modalInstance, $rootScope, Use
   
 }
 
-var ResetPasswordModalInstanceCtrl = function ($scope, $modalInstance, $rootScope, User) {
+var ResetPasswordModalInstanceCtrl = function ($scope, $modalInstance, User) {
   $scope.credentials = {}
   
   $scope.resetPassword = function (credentials) {
@@ -117,7 +123,7 @@ var ResetPasswordModalInstanceCtrl = function ($scope, $modalInstance, $rootScop
     }
     
     User.upsert({
-      id: $scope.currentUser.id,
+      id: User.getCurrentId(),
       password: credentials.password
     }, function (user) {
       $modalInstance.close()

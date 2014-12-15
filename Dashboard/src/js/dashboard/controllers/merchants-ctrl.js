@@ -23,19 +23,17 @@ app.controller('MerchantsCtrl', function MerchantsCtrl($scope, Merchant, $contro
   
 })
 
-var CreateMerchantModalInstanceCtrl = function ($scope, $modalInstance, $rootScope, Merchant) {
+var CreateMerchantModalInstanceCtrl = function ($scope, $modalInstance, CurrentEmploye, User, Merchant) {
 
   var now = Date.now()
   $scope.entity = {
-    ownerID: $scope.currentUser.id,
-    masterPhone: $scope.currentUser.username,
-    telephone: $scope.currentUser.username,
+    ownerID: User.getCurrentId(),
+    masterPhone: User.getCachedCurrent().username,
+    telephone: User.getCachedCurrent().username,
     fullName: "泛盈信息科技有限公司"+now,
     "name": "泛盈科技"+now
   }
-  
-  console.log($scope.currentUser)
-  
+    
   $scope.alerts = []
 	
   $scope.tryCreate = function () {

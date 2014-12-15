@@ -13,12 +13,13 @@ app.controller('EmployesCtrl', function EmployesCtrl($scope, Employe, $controlle
   
 })
 
-var CreateEmployeModalInstanceCtrl = function ($scope, Employe, $controller, $modalInstance) {
+var CreateEmployeModalInstanceCtrl = function ($scope, Employe, $controller, $modalInstance, CurrentEmploye) {
   $controller('CreateModalInstanceCtrl', {$scope: $scope, $modalInstance: $modalInstance})
   $scope.resource = Employe
+  $scope.currentEmploye = CurrentEmploye
 
   $scope.entity = {
-    merchantID: $scope.currentEmploye.merchant.id,
-    shopID: $scope.currentEmploye.shopID
+    merchantID: CurrentEmploye.merchantID,
+    shopID: CurrentEmploye.shopID
   }
 }

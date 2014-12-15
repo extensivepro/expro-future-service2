@@ -24,10 +24,12 @@ app.controller('ItemsCtrl', function ItemsCtrl($scope, Item, $controller, $modal
   }
 })
 
-var CreateItemModalInstanceCtrl = function ($scope, $modalInstance, $rootScope, Item) {
+var CreateItemModalInstanceCtrl = function ($scope, $modalInstance, CurrentEmploye, Item) {
+
+  $scope.currentEmploye = CurrentEmploye
 
   $scope.entity = {
-    merchantID: $scope.currentEmploye.merchant.id,
+    merchantID: CurrentEmploye.merchantID,
     name: "化妆品"+Date.now(),
     code: "1234567890",
     price: 900
