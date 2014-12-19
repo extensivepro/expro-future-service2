@@ -1,6 +1,11 @@
 module.exports = function(Bill) {
 	
   Bill.beforeCreate = function (next, bill) {
+    if(bill.amount <= 0) {
+      var error = new Error('Bad bill, bill can not be 0')
+      error.status = 400
+      return next(error)
+    }
     var now = Math.floor(Date.now()/1000)
     bill.createdAt = bill.createdAt || now
     if(!bill.discountAmount) bill.discountAmount = 0
