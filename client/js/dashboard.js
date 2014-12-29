@@ -4,7 +4,7 @@
 /* Services */
 
 angular.module('expro-future2.services', ['ef-services2'])
-var app = angular.module('Dashboard', ['ui.utils', 'ui.bootstrap', 'ui.router', 'ngCookies', 'ngMorph', 'mgo-angular-wizard', 'expro-future2.services'])
+var app = angular.module('Dashboard', ['ui.utils', 'ui.bootstrap', 'ui.router', 'ef.filters', 'ef.directives', 'ngCookies', 'ngMorph', 'mgo-angular-wizard', 'expro-future2.services'])
 .config(['$httpProvider', function($httpProvider) {
 	$httpProvider.defaults.withCredentials = true
 }])
