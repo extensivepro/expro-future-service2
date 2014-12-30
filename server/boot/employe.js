@@ -28,7 +28,13 @@ module.exports = function(app) {
 			if(req.employe) {
 				req.query.filter = req.query.filter || '{}'
 				var filter = JSON.parse(req.query.filter)
-				filter.where = {merchantID: req.employe.merchantID}
+        if(!filter.where) {
+  				filter.where = {merchantID: req.employe.merchantID}
+        } else if(filter.where.and) {
+          filter.where.and.push({merchantID: req.employe.merchantID})
+        } else {
+          filter.where.merchantID = req.employe.merchantID
+        }
 				req.query.filter = JSON.stringify(filter)
 				next()
 			} else {
